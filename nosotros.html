@@ -1,0 +1,1946 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Estación 7 — Nosotros</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════
+   TOKENS  (mirror del index para coherencia)
+═══════════════════════════════════════════ */
+:root{
+  --navy:#071820; --deep:#0d2c3a; --teal:#15485e;
+  --gold:#c9a227; --gold-lt:#dbb82e;
+  --red:#d94b3e; --aqua:#5ec4c8;
+  --light:#edf1f2; --muted:rgba(237,241,242,.52);
+  --wa:#25D366; --f:'Kanit',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:auto;overflow-x:hidden}
+body{font-family:var(--f);background:var(--navy);color:var(--light);overflow-x:hidden;width:100%;position:relative}
+a{text-decoration:none;color:inherit}
+img{max-width:100%;display:block}
+
+/* ═══════════════════════════════════════════
+   PARTÍCULAS GLOBALES (sutiles, sobre todo el documento)
+   ── Canvas fixed que dibuja puntos pequeños derivando lentamente.
+   ── Usa mix-blend-mode:screen para sumar luz, no opacar texto.
+═══════════════════════════════════════════ */
+.page-particles{
+  position:fixed;
+  inset:0;
+  width:100%;height:100%;
+  pointer-events:none;
+  z-index:1;                     /* sobre los fondos, debajo del nav */
+  mix-blend-mode:screen;
+  opacity:.8;
+}
+
+/* ═══════════════════════════════════════════
+   NAVBAR  (idéntico al index)
+═══════════════════════════════════════════ */
+.nav{
+  position:fixed;top:16px;left:50%;
+  transform:translateX(-50%) translateY(-130%);
+  opacity:0;
+  width:calc(100% - 48px);max-width:1380px;z-index:1000;
+  background:rgba(13,44,58,.52);
+  backdrop-filter:blur(24px) saturate(1.4);
+  -webkit-backdrop-filter:blur(24px) saturate(1.4);
+  border:1px solid rgba(94,196,200,.2);border-radius:20px;
+  height:62px;padding:0 22px;
+  display:flex;align-items:center;justify-content:space-between;
+  transition:
+    background .35s,
+    border-color .35s,
+    opacity 1.1s cubic-bezier(.16,1,.3,1),
+    transform 1.1s cubic-bezier(.16,1,.3,1);
+}
+body.loaded .nav{transform:translateX(-50%) translateY(0);opacity:1}
+.nav.solid{background:rgba(7,24,32,.93);border-color:rgba(94,196,200,.1)}
+.nav-brand{display:flex;align-items:center}
+.nav-brand img{height:33px;width:auto}
+.brand-txt{font-weight:800;font-size:1.22rem;letter-spacing:-.02em}
+.brand-txt .g{color:var(--gold)}
+.nav-links{display:flex;gap:7px;list-style:none}
+.nav-links a{
+  font-weight:400;font-size:.82rem;color:var(--light);
+  padding:7px 15px;border:1px solid rgba(237,241,242,.22);border-radius:30px;
+  white-space:nowrap;transition:background .22s,color .22s,border-color .22s,transform .15s
+}
+.nav-links a:hover{background:var(--gold);border-color:var(--gold);color:var(--navy);transform:translateY(-1px)}
+.nav-links a.active{
+  background:rgba(201,162,39,.14);
+  border-color:rgba(201,162,39,.55);
+  color:var(--gold);
+}
+.nav-links a.active:hover{background:var(--gold);color:var(--navy)}
+
+/* Hamburger + mobile menu */
+.burger{display:none;flex-direction:column;gap:5px;cursor:pointer;z-index:1100;padding:4px}
+.burger span{width:22px;height:2px;background:var(--light);border-radius:2px;display:block;transition:.3s}
+.burger.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+.burger.open span:nth-child(2){opacity:0}
+.burger.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
+.mob-menu{
+  position:fixed;inset:0;background:rgba(7,24,32,.98);z-index:1050;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;
+  opacity:0;pointer-events:none;transition:opacity .3s
+}
+.mob-menu.open{opacity:1;pointer-events:all}
+.mob-menu a{font-weight:700;font-size:1.9rem;transition:color .2s}
+.mob-menu a:hover{color:var(--gold)}
+.mob-menu a.active{color:var(--gold)}
+.mob-close{
+  position:absolute;top:28px;right:28px;
+  width:42px;height:42px;border-radius:50%;border:1px solid rgba(237,241,242,.2);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  font-size:1.2rem;color:var(--light);transition:.2s
+}
+.mob-close:hover{border-color:var(--red);color:var(--red)}
+
+/* ═══════════════════════════════════════════
+   TIPOGRAFÍA COMPARTIDA
+═══════════════════════════════════════════ */
+.eyebrow{
+  display:inline-block;font-weight:300;font-size:.75rem;
+  letter-spacing:.38em;text-transform:uppercase;color:var(--aqua);margin-bottom:14px
+}
+.slabel{
+  display:block;font-weight:300;font-size:.76rem;
+  letter-spacing:.32em;text-transform:uppercase;color:var(--gold);margin-bottom:20px
+}
+.stitle{
+  font-weight:800;font-size:clamp(2rem,5.5vw,3.8rem);
+  line-height:1;letter-spacing:-.025em;margin-bottom:10px
+}
+.stitle .g{color:var(--gold)} .stitle .a{color:var(--aqua)} .stitle .r{color:var(--red)}
+
+/* Buttons (mismo set del index) */
+.btn{
+  display:inline-flex;align-items:center;gap:9px;
+  font-family:var(--f);font-weight:600;font-size:.93rem;
+  padding:13px 30px;border-radius:40px;border:none;cursor:pointer;
+  transition:transform .2s,box-shadow .2s,background .2s,color .2s
+}
+.btn svg{width:16px;height:16px;fill:currentColor;flex-shrink:0}
+.btn-gold{background:var(--gold);color:var(--navy)}
+.btn-gold:hover{background:var(--gold-lt);transform:translateY(-2px);box-shadow:0 10px 36px rgba(201,162,39,.42)}
+.btn-outline{background:transparent;color:var(--light);border:1px solid rgba(237,241,242,.28)}
+.btn-outline:hover{border-color:var(--light);background:rgba(237,241,242,.07);transform:translateY(-1px)}
+
+/* ═══════════════════════════════════════════
+   HERO VIDEO  (sección 1)
+   ── Padding-bottom reducido para acercar el siguiente bloque
+═══════════════════════════════════════════ */
+.nh{
+  position:relative;width:100%;
+  padding:140px 24px 18px;        /* ← bottom muy reducido: sin separación */
+  background:transparent;          /* ← unificado con el body */
+  overflow:hidden;
+  isolation:isolate;
+}
+/* Vignette ambiental sutil del hero (no crea borde porque
+   fade-out es muy gradual y la sección siguiente es del mismo color) */
+.nh::before{
+  content:'';position:absolute;
+  top:-30%;left:50%;transform:translateX(-50%);
+  width:140%;height:140%;
+  background:radial-gradient(ellipse 60% 50% at 50% 35%,
+              rgba(21,72,94,.32) 0%,transparent 72%);
+  pointer-events:none;z-index:0;
+}
+.nh-inner{
+  position:relative;z-index:2;
+  max-width:1280px;margin:0 auto;
+  text-align:center;
+}
+.nh-head{margin-bottom:36px}
+.nh-title{
+  font-weight:800;font-size:clamp(2.4rem,6.4vw,4.6rem);
+  line-height:.96;letter-spacing:-.03em;margin-bottom:8px;
+}
+.nh-title .g{color:var(--gold)}
+
+/* Reproductor
+   ── z-index:6 lo sube POR ENCIMA del spotlight (z:5) y del canvas
+      de partículas (z:1) que es fixed. isolation:isolate fuerza un
+      stacking context propio para que sea hermético.
+   ── Resultado: el spotlight ilumina el resto del hero pero NUNCA
+      pasa por encima del video. Y como el video tiene background
+      sólido, las partículas tampoco se filtran a través. */
+.nh-vid{
+  position:relative;width:100%;max-width:1100px;margin:0 auto;
+  aspect-ratio:16/9;
+  border-radius:22px;overflow:hidden;
+  background:#000;
+  border:1px solid rgba(94,196,200,.18);
+  box-shadow:
+    0 30px 80px -20px rgba(0,0,0,.6),
+    0 0 0 1px rgba(94,196,200,.05) inset;
+  cursor:pointer;
+  z-index:6;
+  isolation:isolate;
+  transition:transform .35s ease,box-shadow .35s ease,border-color .35s ease;
+}
+.nh-vid:hover{
+  transform:translateY(-3px);
+  border-color:rgba(201,162,39,.4);
+  box-shadow:
+    0 40px 90px -20px rgba(0,0,0,.7),
+    0 0 0 1px rgba(201,162,39,.1) inset;
+}
+.nh-vid::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 60% 80% at 50% 50%, rgba(21,72,94,.55) 0%, rgba(7,24,32,.95) 70%),
+    linear-gradient(135deg, #0d2c3a 0%, #071820 100%);
+}
+/* Thumbnail real de YouTube: cubre toda el área del placeholder.
+   z-index:1 lo pone sobre el ::before (fallback) y debajo de la UI. */
+.nh-vid-thumb{
+  position:absolute;inset:0;
+  width:100%;height:100%;
+  object-fit:cover;
+  z-index:1;
+  pointer-events:none;
+  user-select:none;
+}
+/* Overlay de oscurecimiento — garantiza contraste del play button
+   y de los badges contra cualquier thumbnail (claro u oscuro). */
+.nh-vid::after{
+  content:'';position:absolute;inset:0;z-index:2;
+  background:
+    radial-gradient(ellipse 55% 65% at 50% 50%, rgba(0,0,0,.25) 0%, rgba(0,0,0,.55) 100%),
+    linear-gradient(180deg, rgba(0,0,0,.25) 0%, transparent 25%, transparent 70%, rgba(0,0,0,.55) 100%);
+  pointer-events:none;
+  transition:opacity .35s ease;
+}
+.nh-vid:hover::after{opacity:.7}
+/* (Se mantiene el rule de .nh-vid-art por compatibilidad si reusan
+   en otra parte; ya no se usa en este HTML.) */
+.nh-vid-art{
+  position:absolute;inset:0;z-index:1;
+  opacity:.16;pointer-events:none;
+}
+.nh-vid-tag{
+  position:absolute;top:18px;left:22px;z-index:3;
+  font-weight:300;font-size:.7rem;letter-spacing:.32em;
+  text-transform:uppercase;color:rgba(255,255,255,.55);
+}
+.nh-vid-tag::before{
+  content:'';display:inline-block;width:6px;height:6px;border-radius:50%;
+  background:var(--red);margin-right:8px;vertical-align:middle;
+  animation:livedot 1.6s ease-in-out infinite;
+}
+@keyframes livedot{
+  0%,100%{opacity:.6;transform:scale(.9)}
+  50%{opacity:1;transform:scale(1.15);box-shadow:0 0 12px rgba(217,75,62,.7)}
+}
+.nh-vid-dur{
+  position:absolute;bottom:18px;right:22px;z-index:3;
+  font-weight:400;font-size:.7rem;letter-spacing:.08em;
+  padding:5px 12px;border-radius:30px;
+  background:rgba(0,0,0,.55);backdrop-filter:blur(8px);
+  color:rgba(255,255,255,.85);
+  border:1px solid rgba(255,255,255,.12);
+}
+.nh-play{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:3;
+  width:96px;height:96px;border-radius:50%;
+  background:rgba(201,162,39,.95);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;border:none;
+  transition:transform .3s ease,box-shadow .3s ease,background .3s ease;
+  box-shadow:0 10px 40px rgba(201,162,39,.45);
+}
+.nh-play::before,
+.nh-play::after{
+  content:'';position:absolute;inset:0;border-radius:50%;
+  border:2px solid var(--gold);
+  animation:playring 2.4s ease-out infinite;
+}
+.nh-play::after{animation-delay:1.2s}
+@keyframes playring{
+  0%  {transform:scale(1);opacity:.7}
+  100%{transform:scale(1.8);opacity:0}
+}
+.nh-play svg{width:34px;height:34px;fill:var(--navy);margin-left:6px;position:relative;z-index:1}
+.nh-vid:hover .nh-play{transform:translate(-50%,-50%) scale(1.08);background:var(--gold-lt)}
+
+/* Entrance del hero */
+.nh-head > *,
+.nh-vid{
+  opacity:0;transform:translateY(28px);filter:blur(8px);
+  transition:
+    opacity 1.2s cubic-bezier(.16,1,.3,1),
+    transform 1.2s cubic-bezier(.16,1,.3,1),
+    filter 1.1s cubic-bezier(.16,1,.3,1);
+}
+body.loaded .nh-head > *:nth-child(1){transition-delay:.3s}
+body.loaded .nh-head > *:nth-child(2){transition-delay:.45s}
+body.loaded .nh-vid{transition-delay:.65s}
+body.loaded .nh-head > *,
+body.loaded .nh-vid{opacity:1;transform:none;filter:blur(0)}
+
+/* ═══════════════════════════════════════════
+   PODCASTERS  (sección 2)
+   ── Página unificada: fondo transparente, sin gradiente vertical
+   ── que crearía banda visible entre hero y podcasters
+═══════════════════════════════════════════ */
+.pod{
+  position:relative;
+  padding:30px 24px 120px;
+  background:transparent;            /* ← unificado con el body */
+  /* overflow:clip permite recortar X (evitar scrollbar horizontal)
+     pero NO clipea el overflow vertical de elementos hijos como
+     el outline "Podcasters" cuando hace zoom. Fallback: overflow-x. */
+  overflow:clip;
+  overflow-clip-margin:200px;        /* margen amplio: el parallax-Z
+                                         puede llegar a scale(1.22)
+                                         y necesita aire para no recortar */
+}
+@supports not (overflow:clip){
+  .pod{overflow-x:hidden;overflow-y:visible}
+}
+
+.pod-inner{
+  position:relative;z-index:2;
+  max-width:1280px;margin:0 auto;
+}
+.pod-head{text-align:center;margin-bottom:8px}
+
+/* ═══════════════════════════════════════════
+   Título "Podcasters" outline grande
+   ── Entrada: fade + blur + scale suave (como los otros títulos)
+   ── Parallax durante scroll: SOLO Z (zoom), sin Y
+      (el Y anterior provocaba cortes de la "S" porque el padre
+       clipaba al salir por arriba)
+═══════════════════════════════════════════ */
+.pod-bg{
+  position:relative;width:100%;
+  display:flex;justify-content:center;align-items:center;
+  margin-bottom:20px;
+  pointer-events:none;
+  user-select:none;
+  overflow:visible;                  /* permite desbordar al zoom */
+  /* Variables: scale controlada por JS al scroll (parallax-Z),
+     más entry-* para la animación de entrada (fade+blur+scale). */
+  --par-scale:1;
+  --entry-scale:.78;
+  --entry-blur:14px;
+  --entry-opacity:0;
+  transform:scale(calc(var(--par-scale,1) * var(--entry-scale,1)));
+  opacity:var(--entry-opacity);
+  filter:blur(var(--entry-blur));
+  will-change:transform,opacity,filter;
+  transition:
+    opacity 1.6s cubic-bezier(.16,1,.3,1),
+    filter 1.5s cubic-bezier(.16,1,.3,1),
+    --entry-scale 1.7s cubic-bezier(.16,1,.3,1);
+}
+/* Al entrar al viewport: progresivamente visible, sin blur, scale natural */
+.pod-bg.in{
+  --entry-scale:1;
+  --entry-blur:0px;
+  --entry-opacity:1;
+}
+.pod-bg svg{
+  width:100%;max-width:1200px;height:auto;
+  display:block;
+  overflow:visible;                  /* deja al texto salirse del viewBox */
+}
+.pod-bg text{
+  font-family:var(--f);font-weight:900;
+  font-size:220px;letter-spacing:-.04em;
+  fill:none;
+  stroke:url(#podGrad);
+  stroke-width:1.5;
+  paint-order:stroke;
+  filter:drop-shadow(0 0 24px rgba(94,196,200,.12));
+}
+
+/* Soporte @property para animar variables CSS — habilita la transición
+   suave de --entry-scale. Sin esto el scale entra de golpe pero el
+   blur durante la entrada enmascara el snap. */
+@property --entry-scale{
+  syntax:'<number>';
+  initial-value:1;
+  inherits:false;
+}
+@property --entry-blur{
+  syntax:'<length>';
+  initial-value:0px;
+  inherits:false;
+}
+@property --entry-opacity{
+  syntax:'<number>';
+  initial-value:1;
+  inherits:false;
+}
+@property --par-scale{
+  syntax:'<number>';
+  initial-value:1;
+  inherits:false;
+}
+
+/* Lista de podcasters */
+.pod-list{
+  display:flex;flex-direction:column;
+  gap:70px;margin-top:30px;
+  position:relative;
+}
+
+/* ═══════════════════════════════════════════════════════
+   ── NUEVO LAYOUT DE PODCASTER ──
+   Estructura:
+   .pod-row
+     .pod-stage  (contenedor con altura fija)
+       .pod-bar       (cápsula con descripción; sale desde detrás)
+       .pod-figure    (silueta + name-pill, encima)
+   La barra usa clip-path para "desplegarse" lateralmente.
+   La silueta cubre el extremo curvo de la barra; la name-pill
+   cubre la parte inferior de la silueta.
+═══════════════════════════════════════════════════════ */
+.pod-row{
+  position:relative;
+  --sig:var(--aqua);
+  --sig-rgb:94,196,200;
+  --sig-soft:rgba(94,196,200,.16);
+}
+.pod-row[data-sig="gold"]{--sig:var(--gold);--sig-rgb:201,162,39;--sig-soft:rgba(201,162,39,.18)}
+.pod-row[data-sig="red"] {--sig:var(--red); --sig-rgb:217,75,62; --sig-soft:rgba(217,75,62,.18)}
+.pod-row[data-sig="aqua"]{--sig:var(--aqua);--sig-rgb:94,196,200;--sig-soft:rgba(94,196,200,.18)}
+
+.pod-stage{
+  position:relative;
+  width:100%;
+  max-width:1100px;
+  margin:0 auto;
+  display:flex;
+  align-items:center;
+  min-height:320px;
+}
+
+/* ─ FIGURA (silueta + pill de nombre) ─────────────────── */
+.pod-figure{
+  position:relative;z-index:3;
+  width:280px;flex-shrink:0;
+  height:320px;
+  display:flex;align-items:flex-end;justify-content:center;
+  pointer-events:none;
+  transition:transform .55s cubic-bezier(.16,1,.3,1);
+}
+.pod-silh-img{
+  position:absolute;
+  bottom:0;                /* sin offset: la silueta llega abajo,
+                              y la name-pill (z-index:4) la tapa */
+  left:50%;transform:translateX(-50%);
+  height:100%;
+  width:auto;max-width:100%;
+  object-fit:contain;object-position:bottom center;
+  filter:drop-shadow(0 14px 28px rgba(0,0,0,.45));
+}
+.pod-namepill{
+  position:absolute;
+  bottom:-6px;             /* ligeramente fuera para "anclar" el pie */
+  left:50%;transform:translateX(-50%);
+  display:inline-flex;align-items:center;gap:12px;
+  background:#0a1419;
+  border:1.5px solid rgba(var(--sig-rgb),.55);
+  border-radius:80px;
+  padding:18px 40px;       /* + alto + ancho que antes (13/30) */
+  min-width:78%;           /* asegura que tape la base de la silueta */
+  justify-content:center;
+  font-weight:800;font-size:1.55rem;line-height:1;letter-spacing:-.015em;
+  color:var(--light);
+  white-space:nowrap;
+  box-shadow:
+    0 16px 36px -10px rgba(0,0,0,.7),
+    0 0 32px -6px rgba(var(--sig-rgb),.55);
+  z-index:4;
+  transition:border-color .35s ease,box-shadow .35s ease,transform .4s cubic-bezier(.16,1,.3,1);
+}
+.pod-name-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--sig);
+  box-shadow:0 0 12px rgba(var(--sig-rgb),.85);
+  animation:livedot 1.6s ease-in-out infinite;
+  flex-shrink:0;
+}
+
+/* "?" para el podcaster pendiente (sobre la silueta) */
+.pod-silh-q{
+  position:absolute;
+  top:34%;left:50%;transform:translate(-50%,-50%);
+  width:80px;height:80px;border-radius:50%;
+  background:rgba(7,24,32,.7);backdrop-filter:blur(8px);
+  border:2px solid var(--sig);
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:2.2rem;color:var(--sig);
+  z-index:5;
+  animation:qpulse 2.2s ease-in-out infinite;
+  box-shadow:0 0 26px rgba(var(--sig-rgb),.4);
+}
+@keyframes qpulse{
+  0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.92}
+  50%{transform:translate(-50%,-50%) scale(1.08);opacity:1}
+}
+
+/* ─ BARRA (cápsula con la descripción) ────────────────── */
+.pod-bar{
+  position:relative;z-index:2;
+  flex:1;
+  min-height:200px;
+  /* Border-radius asimétrico: el lado plano va donde toca la silueta;
+     cada layout (left/right) lo redefine abajo. Default = full pill. */
+  border-radius:160px;
+  padding:36px 60px;
+  display:flex;flex-direction:column;justify-content:center;gap:10px;
+  background:
+    linear-gradient(135deg,
+      rgba(13,44,58,.92) 0%,
+      rgba(7,24,32,.86) 100%);
+  border:1px solid rgba(var(--sig-rgb),.22);
+  box-shadow:
+    0 20px 60px -22px rgba(0,0,0,.55),
+    0 0 0 1px rgba(var(--sig-rgb),.06) inset;
+  overflow:hidden;
+  transition:border-color .35s ease,box-shadow .35s ease;
+}
+/* Halo lateral del color firma dentro de la barra */
+.pod-bar::after{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(
+    ellipse 50% 100% at 0% 50%,
+    var(--sig-soft) 0%,
+    transparent 65%);
+  opacity:.85;
+  transition:opacity .5s ease;
+}
+
+/* Layout LEFT: silueta a la izquierda, barra a la derecha.
+   Border-radius:0 en el lado de la silueta (plano).
+   El mask difumina TANTO el fill como el contorno desde 0% opacidad. */
+.pod-row--left .pod-stage{flex-direction:row}
+.pod-row--left .pod-bar{
+  margin-left:-100px;
+  padding-left:140px;
+  padding-right:48px;
+  border-radius:0 160px 160px 0;
+  /* Mask con curva ease-like: fill arranca en 0% y crece, redondeo solo
+     visible donde la opacidad ya es alta */
+  -webkit-mask-image:linear-gradient(to right,
+                       transparent 0%,
+                       rgba(0,0,0,.15) 5%,
+                       rgba(0,0,0,.55) 12%,
+                       #000 22%,
+                       #000 100%);
+          mask-image:linear-gradient(to right,
+                       transparent 0%,
+                       rgba(0,0,0,.15) 5%,
+                       rgba(0,0,0,.55) 12%,
+                       #000 22%,
+                       #000 100%);
+}
+.pod-row--left .pod-bar::after{
+  background:radial-gradient(ellipse 50% 100% at 0% 50%,
+    var(--sig-soft) 0%,transparent 65%);
+}
+
+/* Layout RIGHT: silueta a la derecha, barra a la izquierda.
+   Texto alineado a la DERECHA (cerca de la silueta) para evitar el
+   "pegado" al borde curvo izquierdo. */
+.pod-row--right .pod-stage{flex-direction:row-reverse}
+.pod-row--right .pod-bar{
+  margin-right:-100px;
+  padding-right:140px;
+  padding-left:48px;
+  text-align:right;
+  border-radius:160px 0 0 160px;
+  -webkit-mask-image:linear-gradient(to left,
+                       transparent 0%,
+                       rgba(0,0,0,.15) 5%,
+                       rgba(0,0,0,.55) 12%,
+                       #000 22%,
+                       #000 100%);
+          mask-image:linear-gradient(to left,
+                       transparent 0%,
+                       rgba(0,0,0,.15) 5%,
+                       rgba(0,0,0,.55) 12%,
+                       #000 22%,
+                       #000 100%);
+}
+.pod-row--right .pod-bar::after{
+  background:radial-gradient(ellipse 50% 100% at 100% 50%,
+    var(--sig-soft) 0%,transparent 65%);
+}
+.pod-row--right .pod-namepill{flex-direction:row-reverse}
+
+/* Contenido del bar */
+.pod-role{
+  font-weight:300;font-size:.7rem;letter-spacing:.28em;
+  text-transform:uppercase;color:var(--sig);
+}
+.pod-divider{
+  width:48px;height:2px;border-radius:2px;
+  background:linear-gradient(90deg,var(--sig) 0%,transparent 100%);
+  margin:2px 0 4px;
+  transition:width .5s cubic-bezier(.16,1,.3,1);
+}
+.pod-row--right .pod-divider{
+  background:linear-gradient(90deg,transparent 0%,var(--sig) 100%);
+  margin-left:auto;
+}
+.pod-desc{
+  font-weight:300;font-size:clamp(.95rem,1.4vw,1.1rem);
+  line-height:1.65;color:rgba(237,241,242,.82);
+  max-width:480px;
+}
+.pod-row--right .pod-desc{margin-left:auto}
+
+/* Waveform inferior dentro del bar */
+.pod-wave{
+  position:absolute;bottom:18px;left:0;right:0;height:22px;
+  display:flex;align-items:flex-end;justify-content:center;gap:3px;
+  padding:0 130px;
+  pointer-events:none;
+  opacity:.28;
+  transition:opacity .4s ease;
+}
+.pod-wave-bar{
+  width:2.5px;border-radius:2px;
+  background:var(--sig);
+  animation:wavebar 1.4s ease-in-out infinite;
+  height:6px;
+  animation-play-state:paused;
+}
+.pod-wave-bar:nth-child(1) {animation-delay:0s   ;--h:8px }
+.pod-wave-bar:nth-child(2) {animation-delay:.08s ;--h:14px}
+.pod-wave-bar:nth-child(3) {animation-delay:.16s ;--h:20px}
+.pod-wave-bar:nth-child(4) {animation-delay:.24s ;--h:11px}
+.pod-wave-bar:nth-child(5) {animation-delay:.32s ;--h:18px}
+.pod-wave-bar:nth-child(6) {animation-delay:.40s ;--h:9px }
+.pod-wave-bar:nth-child(7) {animation-delay:.48s ;--h:16px}
+.pod-wave-bar:nth-child(8) {animation-delay:.56s ;--h:22px}
+.pod-wave-bar:nth-child(9) {animation-delay:.64s ;--h:10px}
+.pod-wave-bar:nth-child(10){animation-delay:.72s ;--h:15px}
+.pod-wave-bar:nth-child(11){animation-delay:.80s ;--h:7px }
+.pod-wave-bar:nth-child(12){animation-delay:.88s ;--h:19px}
+.pod-wave-bar:nth-child(13){animation-delay:.96s ;--h:12px}
+.pod-wave-bar:nth-child(14){animation-delay:1.04s;--h:21px}
+.pod-wave-bar:nth-child(15){animation-delay:1.12s;--h:8px }
+@keyframes wavebar{
+  0%,100%{height:6px}
+  50%{height:var(--h,18px)}
+}
+
+/* ── Hover states ── */
+.pod-row{cursor:pointer}
+.pod-row:hover .pod-figure{transform:translateY(-6px)}
+.pod-row:hover .pod-namepill{
+  border-color:rgba(var(--sig-rgb),.85);
+  box-shadow:
+    0 18px 38px -10px rgba(0,0,0,.7),
+    0 0 32px -6px rgba(var(--sig-rgb),.65);
+}
+.pod-row:hover .pod-bar{
+  border-color:rgba(var(--sig-rgb),.55);
+  box-shadow:
+    0 28px 70px -22px rgba(var(--sig-rgb),.35),
+    0 0 0 1px rgba(var(--sig-rgb),.18) inset;
+}
+.pod-row:hover .pod-bar::after{opacity:1}
+.pod-row:hover .pod-divider{width:80px}
+.pod-row:hover .pod-wave{opacity:.92}
+.pod-row:hover .pod-wave-bar{animation-play-state:running}
+
+/* ── Estado is-playing (audio del conductor reproduciéndose) ──
+   Refuerza visualmente la fila activa: barra waveform en marcha,
+   pill con glow más intenso, divisor extendido. */
+.pod-row.is-playing .pod-wave{opacity:1}
+.pod-row.is-playing .pod-wave-bar{animation-play-state:running}
+.pod-row.is-playing .pod-namepill{
+  border-color:rgba(var(--sig-rgb),.95);
+  box-shadow:
+    0 18px 38px -10px rgba(0,0,0,.7),
+    0 0 44px -2px rgba(var(--sig-rgb),.85);
+}
+.pod-row.is-playing .pod-bar{
+  border-color:rgba(var(--sig-rgb),.7);
+}
+.pod-row.is-playing .pod-divider{width:100px}
+/* Pulso del dot del nombre más rápido durante playback */
+.pod-row.is-playing .pod-name-dot{animation-duration:.85s}
+
+/* ═══════════════════════════════════════════
+   ANIMACIÓN DE ENTRADA COREOGRAFIADA
+   Orden definido por el usuario para evitar que se vea la
+   silueta cortada al entrar:
+   1. Name-pill aparece PRIMERO (queda anclada en su lugar)
+   2. Silueta aparece DETRÁS de la pill (que ya tapa su base)
+   3. Barra se despliega lateralmente (clip-path)
+   4. Contenido textual del bar aparece al final
+═══════════════════════════════════════════ */
+.pod-silh-img,
+.pod-bar,
+.pod-bar > *,
+.pod-namepill{
+  will-change:transform,opacity,clip-path,filter;
+}
+
+/* (1) NAME-PILL — entra primero */
+.pod-namepill{
+  opacity:0;
+  transform:translateX(-50%) translateY(22px) scale(.92);
+  filter:blur(4px);
+  transition:
+    opacity .75s cubic-bezier(.16,1,.3,1) 0s,
+    transform .85s cubic-bezier(.16,1,.3,1) 0s,
+    filter .7s cubic-bezier(.16,1,.3,1) 0s,
+    border-color .35s ease,
+    box-shadow .35s ease;
+}
+
+/* (2) SILUETA — entra detrás de la pill, ligeramente después
+   El delay es CORTO para que ambas se sientan ligadas pero la pill
+   siempre llegue primero a posición (cubriendo la base recortada). */
+.pod-silh-img{
+  opacity:0;
+  /* preservamos el translateX(-50%) base */
+  transform:translateX(-50%) translateY(28px) scale(.94);
+  /* combinamos drop-shadow base + blur de entrada */
+  filter:drop-shadow(0 14px 28px rgba(0,0,0,.45)) blur(6px);
+  transition:
+    opacity .9s cubic-bezier(.16,1,.3,1) .25s,
+    transform 1s cubic-bezier(.16,1,.3,1) .25s,
+    filter .8s cubic-bezier(.16,1,.3,1) .25s;
+}
+
+/* (3) BARRA — despliegue lateral */
+.pod-bar{
+  clip-path:inset(0 100% 0 0);
+  transition:
+    clip-path 1s cubic-bezier(.7,0,.25,1) .65s,
+    border-color .35s ease,
+    box-shadow .35s ease;
+}
+.pod-row--right .pod-bar{
+  clip-path:inset(0 0 0 100%);
+}
+
+/* (4) CONTENIDO TEXTUAL del bar */
+.pod-bar .pod-role,
+.pod-bar .pod-divider,
+.pod-bar .pod-desc{
+  opacity:0;
+  transform:translateY(14px);
+  transition:
+    opacity .7s ease,
+    transform .7s cubic-bezier(.16,1,.3,1);
+}
+.pod-bar .pod-role    {transition-delay:1.35s}
+.pod-bar .pod-divider {transition-delay:1.48s}
+.pod-bar .pod-desc    {transition-delay:1.60s}
+
+/* Estado activo (.in) */
+.pod-row.in .pod-namepill{
+  opacity:1;
+  transform:translateX(-50%) translateY(0) scale(1);
+  filter:blur(0);
+}
+.pod-row.in .pod-silh-img{
+  opacity:1;
+  transform:translateX(-50%) translateY(0) scale(1);
+  filter:drop-shadow(0 14px 28px rgba(0,0,0,.45)) blur(0);
+}
+.pod-row.in .pod-bar{clip-path:inset(0 0 0 0)}
+.pod-row.in .pod-bar .pod-role,
+.pod-row.in .pod-bar .pod-divider,
+.pod-row.in .pod-bar .pod-desc{
+  opacity:1;transform:translateY(0);
+}
+
+/* ═══════════════════════════════════════════
+   CTA DE CIERRE  (sección 3)
+   ── También unificada al fondo del body (sin gradiente vertical)
+═══════════════════════════════════════════ */
+.ncta{
+  position:relative;
+  padding:110px 24px;
+  background:transparent;
+  overflow:hidden;
+  text-align:center;
+}
+.ncta::before{
+  content:'';position:absolute;inset:0;
+  /* Sólo un acento radial sutil, sin gradiente vertical que cree banda */
+  background:radial-gradient(ellipse 50% 60% at 50% 40%,
+              rgba(21,72,94,.32) 0%, transparent 72%);
+  z-index:0;
+}
+.ncta-inner{
+  position:relative;z-index:2;
+  max-width:760px;margin:0 auto;
+}
+.ncta-title{
+  font-weight:800;font-size:clamp(2rem,5.5vw,3.6rem);
+  line-height:1.05;letter-spacing:-.025em;
+  margin:18px 0 22px;
+}
+.ncta-title .g{color:var(--gold)}
+.ncta-sub{
+  font-weight:300;font-size:clamp(.95rem,1.6vw,1.1rem);
+  color:var(--muted);line-height:1.75;
+  max-width:520px;margin:0 auto 40px;
+}
+.ncta .btn{font-size:1rem;padding:16px 36px}
+
+/* ═══════════════════════════════════════════
+   MARQUEE
+═══════════════════════════════════════════ */
+.marquee{
+  position:relative;
+  background:
+    radial-gradient(ellipse 80% 100% at 50% 50%, #9a3328 0%, #6b211a 100%);
+  border-top:1px solid rgba(217,75,62,.32);
+  border-bottom:1px solid rgba(0,0,0,.28);
+  padding:32px 0;overflow:hidden;
+  -webkit-mask-image:linear-gradient(to right,transparent,#000 8%,#000 92%,transparent);
+          mask-image:linear-gradient(to right,transparent,#000 8%,#000 92%,transparent);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06), inset 0 -1px 0 rgba(0,0,0,.25);
+}
+.marquee-track{
+  display:flex;width:max-content;
+  animation:marquee-scroll 38s linear infinite;
+  will-change:transform;
+}
+.marquee:hover .marquee-track{animation-play-state:paused}
+.marquee-item{
+  display:flex;align-items:center;gap:48px;
+  margin-right:48px;
+  font-weight:800;font-size:clamp(1.6rem,3.6vw,2.6rem);
+  letter-spacing:-.02em;line-height:1;
+  color:#fff5ee;white-space:nowrap;
+  flex-shrink:0;
+  text-shadow:0 1px 0 rgba(0,0,0,.18);
+}
+.marquee-item span{
+  background:linear-gradient(90deg, #fff5ee 0%, rgba(255,245,238,.55) 100%);
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.marquee-dot{
+  width:14px;height:14px;border-radius:50%;
+  flex-shrink:0;
+  background:var(--gold);
+  box-shadow:0 0 0 2px rgba(0,0,0,.18);
+  transition:background 1.2s ease,transform .55s cubic-bezier(.22,1,.36,1);
+}
+.marquee:hover .marquee-dot{transform:rotate(180deg) scale(1.25)}
+@keyframes marquee-scroll{
+  from{transform:translate3d(0,0,0)}
+  to  {transform:translate3d(var(--marquee-shift,-50%),0,0)}
+}
+
+/* ═══════════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════════ */
+.footer{background:#030d12;padding:60px 24px 32px}
+.footer-in{max-width:1160px;margin:0 auto}
+.footer-top{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:24px;flex-wrap:wrap;margin-bottom:44px;padding-bottom:44px;
+  border-bottom:1px solid rgba(94,196,200,.1)
+}
+.fbrand img{height:20px;width:auto;display: block}
+.fbrand-txt{font-weight:800;font-size:1.35rem;letter-spacing:-.02em}
+.fbrand-txt .g{color:var(--gold)}
+.fsocs{display:flex;gap:10px}
+.fsoc{
+  width:40px;height:40px;border-radius:50%;
+  border:1px solid rgba(237,241,242,.15);
+  display:flex;align-items:center;justify-content:center;
+  transition:border-color .2s,color .2s
+}
+.fsoc svg{width:15px;height:15px;fill:currentColor}
+.fsoc:hover{border-color:var(--gold);color:var(--gold)}
+.footer-copy{font-weight:300;font-size:.76rem;color:rgba(237,241,242,.26);text-align:center}
+
+/* ═══════════════════════════════════════════
+   BACK TO TOP
+═══════════════════════════════════════════ */
+.btt{
+  position:fixed;bottom:28px;right:28px;z-index:900;
+  width:46px;height:46px;border-radius:50%;
+  background:rgba(13,44,58,.75);border:1px solid rgba(201,162,39,.35);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  color:var(--gold);display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+  opacity:0;transform:translateY(12px);pointer-events:none;
+  transition:opacity .4s ease,transform .4s ease,background .22s,border-color .22s
+}
+.btt.show{opacity:1;transform:none;pointer-events:all}
+.btt:hover{background:var(--gold);border-color:var(--gold);color:var(--navy)}
+.btt svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+
+/* ═══════════════════════════════════════════
+   SCROLL REVEALS
+═══════════════════════════════════════════ */
+.rv{
+  opacity:0;transform:translateY(28px);
+  transition:
+    opacity 1.2s cubic-bezier(.16,1,.3,1),
+    transform 1.2s cubic-bezier(.16,1,.3,1);
+}
+.rv.d1{transition-delay:.15s}
+.rv.d2{transition-delay:.3s}
+.rv.d3{transition-delay:.45s}
+.rv.in{opacity:1;transform:none}
+
+/* ═══════════════════════════════════════════
+   SPOTLIGHT CURSOR (desktop)
+   ── mix-blend-mode más suave en .pod para evitar artefactos
+═══════════════════════════════════════════ */
+.has-spotlight{position:relative}
+.has-spotlight::after{
+  content:'';position:absolute;inset:0;
+  pointer-events:none;z-index:5;
+  opacity:0;transition:opacity .55s ease;
+  background:radial-gradient(
+    circle 340px at var(--sx,50%) var(--sy,50%),
+    rgba(201,162,39,.12),
+    rgba(94,196,200,.03) 35%,
+    transparent 65%
+  );
+  mix-blend-mode:screen;
+}
+.has-spotlight.spot-on::after{opacity:1}
+/* En la sección de podcasters, el spotlight usa lighten (más sutil)
+   y el gradiente es más grande/disperso para no marcar bordes */
+.pod.has-spotlight::after{
+  background:radial-gradient(
+    circle 420px at var(--sx,50%) var(--sy,50%),
+    rgba(94,196,200,.10),
+    rgba(201,162,39,.04) 40%,
+    transparent 75%
+  );
+  mix-blend-mode:lighten;
+}
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════ */
+@media(max-width:1024px){
+  .pod-figure{width:240px;height:300px}
+  .pod-stage{min-height:300px}
+  .pod-row--left .pod-bar{padding-left:120px}
+  .pod-row--right .pod-bar{padding-right:120px}
+  .pod-bar{padding:32px 50px;min-height:190px}
+}
+
+@media(max-width:900px){
+  .nav-links{display:none}
+  .burger{display:flex}
+  .pod{padding:24px 20px 90px}
+  .pod-bg text{font-size:160px}
+  .nh{padding:120px 20px 24px}
+}
+
+/* ═══════════════════════════════════════════
+   MOBILE: layout vertical replanteado
+   - Silueta centrada arriba, name-pill abajo de la silueta
+   - Barra debajo, full-width, con gradiente arriba (donde se "mete" la silueta)
+   - "PODCASTERS" outline MÁS GRANDE
+═══════════════════════════════════════════ */
+@media(max-width:768px){
+  .pod-list{gap:60px;margin-top:18px}
+
+  /* Reset del flex direction y márgenes negativos */
+  .pod-row--left .pod-stage,
+  .pod-row--right .pod-stage{
+    flex-direction:column;
+    align-items:stretch;
+    min-height:0;
+  }
+
+  .pod-figure,
+  .pod-row--left .pod-figure,
+  .pod-row--right .pod-figure{
+    width:100%;
+    height:280px;
+    margin:0 0 -70px;            /* se mete sobre el bar */
+    z-index:4;
+  }
+  .pod-silh-img{
+    height:100%;
+    bottom:0;
+  }
+  .pod-namepill{
+    font-size:1.3rem;
+    padding:14px 28px;
+    min-width:60%;
+    bottom:-6px;
+  }
+
+  /* Barra: full width, sin offset, top plano (lado silueta) +
+     bottom redondeado. Mask superior difumina fill y contorno. */
+  .pod-bar,
+  .pod-row--left .pod-bar,
+  .pod-row--right .pod-bar{
+    margin:0;
+    padding:90px 28px 60px;
+    border-radius:0 0 36px 36px;
+    text-align:center;
+    -webkit-mask-image:linear-gradient(to bottom,
+                         transparent 0%,
+                         rgba(0,0,0,.2) 5%,
+                         rgba(0,0,0,.6) 12%,
+                         #000 22%,
+                         #000 100%);
+            mask-image:linear-gradient(to bottom,
+                         transparent 0%,
+                         rgba(0,0,0,.2) 5%,
+                         rgba(0,0,0,.6) 12%,
+                         #000 22%,
+                         #000 100%);
+    min-height:auto;
+  }
+  .pod-row--right .pod-desc{margin-left:auto;margin-right:auto}
+  .pod-row--right .pod-divider{margin:2px auto 4px}
+  .pod-divider{margin:2px auto 4px}
+  .pod-desc{margin-left:auto;margin-right:auto}
+
+  /* Clip-path móvil: barra se despliega de arriba a abajo, sin round
+     (el border-radius asimétrico define la forma) */
+  .pod-bar,
+  .pod-row--left .pod-bar,
+  .pod-row--right .pod-bar{
+    clip-path:inset(0 0 100% 0);
+  }
+  .pod-row.in .pod-bar,
+  .pod-row.in.pod-row--left .pod-bar,
+  .pod-row.in.pod-row--right .pod-bar{
+    clip-path:inset(0 0 0 0);
+  }
+
+  .pod-wave{padding:0 24px;bottom:16px}
+
+  .pod-silh-q{width:64px;height:64px;font-size:1.7rem;top:38%}
+
+  /* Hero video */
+  .nh-vid{border-radius:16px}
+  .nh-play{width:74px;height:74px}
+  .nh-play svg{width:26px;height:26px}
+  .nh-vid-tag{font-size:.6rem;top:14px;left:16px;letter-spacing:.24em}
+  .nh-vid-dur{font-size:.6rem;bottom:14px;right:16px;padding:4px 10px}
+
+  /* Hover off en móvil */
+  .pod-row:hover .pod-figure{transform:none}
+  .pod-row:hover .pod-bar{transform:none}
+
+  /* Nav móvil */
+  .nav{width:calc(100% - 24px);top:12px;padding:10px 16px}
+  .nav-brand img{height:32px}
+
+  /* Spotlight off en móvil */
+  .has-spotlight::after{display:none!important}
+}
+
+@media(max-width:480px){
+  /* PODCASTERS outline MÁS GRANDE en móvil — pero CENTRADO.
+     Antes usábamos margin-left:-20% lo que lo tiraba a la izquierda.
+     Ahora dejamos overflow visible y el SVG centrado por el flex
+     del padre (justify-content:center). */
+  .pod-bg{margin-bottom:8px;overflow:visible}
+  .pod-bg text{font-size:200px;stroke-width:1.2}
+  .pod-bg svg{
+    width:140%;
+    max-width:none;
+    margin:0;
+    flex-shrink:0;
+  }
+
+  .pod-figure,
+  .pod-row--left .pod-figure,
+  .pod-row--right .pod-figure{height:240px;margin-bottom:-65px}
+  .pod-namepill{font-size:1.2rem;padding:13px 26px;min-width:62%}
+  .pod-bar,
+  .pod-row--left .pod-bar,
+  .pod-row--right .pod-bar{padding:84px 22px 56px;border-radius:0 0 32px 32px}
+  .pod-bar,
+  .pod-row--left .pod-bar,
+  .pod-row--right .pod-bar{
+    clip-path:inset(0 0 100% 0);
+  }
+  .pod-row.in .pod-bar,
+  .pod-row.in.pod-row--left .pod-bar,
+  .pod-row.in.pod-row--right .pod-bar{
+    clip-path:inset(0 0 0 0);
+  }
+
+  .pod-desc{font-size:.92rem}
+  .nh{padding:110px 16px 20px}
+  .ncta{padding:90px 20px}
+  .btt{bottom:18px;right:18px;width:42px;height:42px}
+}
+
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:.01ms!important;
+    transition-duration:.01ms!important;
+  }
+  /* En reduced-motion, el outline aparece estático y sin parallax */
+  .pod-bg{
+    --entry-scale:1!important;
+    --entry-blur:0px!important;
+    --entry-opacity:1!important;
+    --par-scale:1!important;
+  }
+  /* Sin clip-path animado para evitar saltos abruptos */
+  .pod-bar{clip-path:none!important}
+}
+</style>
+</head>
+<body>
+
+<!-- Partículas globales (sutiles, sobre todo el documento) -->
+<canvas class="page-particles" id="pageParticles" aria-hidden="true"></canvas>
+
+<!-- ╔═══════════════╗
+     ║    NAVBAR     ║
+     ╚═══════════════╝ -->
+<nav class="nav" id="nav">
+  <a href="index.html" class="nav-brand">
+    <img src="assets/img/logo-e7-blanco1.svg" alt="Estación 7">
+  </a>
+  <ul class="nav-links">
+    <li><a href="nosotros.html" class="active">Nosotros</a></li>
+    <li><a href="episodios.html">Episodios</a></li>
+    <li><a href="index.html#guia">Solicita tu guía</a></li>
+    <li><a href="nuevotiempo.html">Nuevo Tiempo Chile</a></li>
+  </ul>
+  <div class="burger" id="burger"><span></span><span></span><span></span></div>
+</nav>
+
+<!-- Mobile overlay -->
+<div class="mob-menu" id="mobMenu">
+  <div class="mob-close" id="mobClose">✕</div>
+  <a href="nosotros.html" class="active">Nosotros</a>
+  <a href="episodios.html">Episodios</a>
+  <a href="index.html#guia">Solicita tu guía</a>
+  <a href="nuevotiempo.html">Nuevo Tiempo Chile</a>
+</div>
+
+<!-- ╔═══════════════╗
+     ║   HERO VIDEO  ║
+     ╚═══════════════╝ -->
+<section class="nh has-spotlight" id="hero">
+  <div class="nh-inner">
+    <div class="nh-head">
+      <span class="eyebrow">Detrás del podcast</span>
+      <h1 class="nh-title">Conoce <span class="g">Estación 7</span></h1>
+    </div>
+  </div>
+
+  <!-- El video va FUERA de .nh-inner para que su z-index:6 funcione
+       en el stacking context de la raíz (.nh-inner crea su propio
+       context a z:2 que atraparía al video). Así el video queda por
+       encima del spotlight (z:5) y del canvas de partículas (z:1). -->
+  <div class="nh-vid" id="nhVid" role="button" tabindex="0" aria-label="Reproducir video de presentación">
+    <img class="nh-vid-thumb"
+         src="https://img.youtube.com/vi/cHo0RqadL9c/maxresdefault.jpg"
+         alt=""
+         aria-hidden="true"
+         loading="lazy"
+         onerror="this.src='https://img.youtube.com/vi/cHo0RqadL9c/hqdefault.jpg'">
+
+    <button class="nh-play" aria-label="Reproducir">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M5 3l14 9-14 9V3z"/></svg>
+    </button>
+  </div>
+</section>
+
+<!-- ╔═══════════════╗
+     ║  PODCASTERS   ║
+     ╚═══════════════╝ -->
+<section class="pod has-spotlight" id="podcasters">
+  <div class="pod-inner">
+
+    <div class="pod-head">
+      <span class="slabel rv">El equipo</span>
+      <h2 class="stitle rv d1">Las voces de <span class="g">Estación 7</span></h2>
+    </div>
+
+    <!-- Título outline "Podcasters" -->
+    <div class="pod-bg" id="podBg">
+      <svg viewBox="0 0 1200 280" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs>
+          <linearGradient id="podGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%"   stop-color="#5ec4c8"/>
+            <stop offset="50%"  stop-color="#c9a227"/>
+            <stop offset="100%" stop-color="#5ec4c8"/>
+          </linearGradient>
+        </defs>
+        <text x="600" y="210" text-anchor="middle">Podcasters</text>
+      </svg>
+    </div>
+
+    <div class="pod-list">
+
+      <!-- ── Podcaster 1 — pendiente de definir ─── -->
+      <article class="pod-row pod-row--left" data-sig="aqua">
+        <div class="pod-stage">
+          <div class="pod-figure">
+            <!-- Silueta 1: SVG escalable -->
+            <img class="pod-silh-img"
+                 src="assets/podcasters/silueta_1.svg"
+                 alt=""
+                 aria-hidden="true">
+            <!-- Pill de nombre, sólida, tapa la base de la silueta -->
+            <div class="pod-namepill">
+              <span class="pod-name-dot" aria-hidden="true"></span>
+              Podcaster 1
+            </div>
+          </div>
+          <div class="pod-bar">
+            <span class="pod-role">Conductor</span>
+            <div class="pod-divider" aria-hidden="true"></div>
+            <p class="pod-desc">Soy la voz de los que preguntan, de los que dudan y de los que viven el día a día en Santiago buscando algo más.</p>
+            <div class="pod-wave" aria-hidden="true">
+              <span class="pod-wave-bar"></span><span class="pod-wave-bar"></span>
+              <span class="pod-wave-bar"></span><span class="pod-wave-bar"></span>
+              <span class="pod-wave-bar"></span><span class="pod-wave-bar"></span>
+              <span class="pod-wave-bar"></span><span class="pod-wave-bar"></span>
+              <span class="pod-wave-bar"></span><span class="pod-wave-bar"></span>
+              <span class="pod-wave-bar"></span><span class="pod-wave-bar"></span>
+              <span class="pod-wave-bar"></span><span class="pod-wave-bar"></span>
+              <span class="pod-wave-bar"></span>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ── Podcaster 2 — Sofía Cáceres ─── -->
+      <article class="pod-row pod-row--right" data-sig="gold">
+        <div class="pod-stage">
+          <div class="pod-figure">
+            <img class="pod-silh-img"
+                 src="assets/podcasters/silueta_2-sofia.svg"
+                 alt=""
+                 aria-hidden="true">
+            <div class="pod-namepill">
+              <span class="pod-name-dot" aria-hidden="true"></span>
+              Sofía Cáceres
+            </div>
+          </div>
+          <div class="pod-bar">
+            <span class="pod-role">Conductora</span>
+            <div class="pod-divider" aria-hidden="true"></div>
+            <p class="pod-desc">Aporto herramientas para que tu salud mental y tu espiritualidad caminen de la mano.</p>
+            <div class="pod-wave" aria-hidden="true">
+              <span class="pod-wave-bar"></span><span class="pod-wave-bar"></span>
+              <span class="pod-wave-bar"></span><span class="pod-wave-bar"></span>
+              <span class="pod-wave-bar"></span><span class="pod-wave-bar"></span>
+              <span class="pod-wave-bar"></span><span class="pod-wave-bar"></span>
+              <span class="pod-wave-bar"></span><span class="pod-wave-bar"></span>
+              <span class="pod-wave-bar"></span><span class="pod-wave-bar"></span>
+              <span class="pod-wave-bar"></span><span class="pod-wave-bar"></span>
+              <span class="pod-wave-bar"></span>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ── Podcaster 3 — Damián Cabezas ─── -->
+      <article class="pod-row pod-row--left" data-sig="red">
+        <div class="pod-stage">
+          <div class="pod-figure">
+            <img class="pod-silh-img"
+                 src="assets/podcasters/silueta_3-damian.svg"
+                 alt=""
+                 aria-hidden="true">
+            <div class="pod-namepill">
+              <span class="pod-name-dot" aria-hidden="true"></span>
+              Damián Cabezas
+            </div>
+          </div>
+          <div class="pod-bar">
+            <span class="pod-role">Conductor</span>
+            <div class="pod-divider" aria-hidden="true"></div>
+            <p class="pod-desc">Exploro la Biblia para encontrar respuestas prácticas a los desafíos de hoy.</p>
+            <div class="pod-wave" aria-hidden="true">
+              <span class="pod-wave-bar"></span><span class="pod-wave-bar"></span>
+              <span class="pod-wave-bar"></span><span class="pod-wave-bar"></span>
+              <span class="pod-wave-bar"></span><span class="pod-wave-bar"></span>
+              <span class="pod-wave-bar"></span><span class="pod-wave-bar"></span>
+              <span class="pod-wave-bar"></span><span class="pod-wave-bar"></span>
+              <span class="pod-wave-bar"></span><span class="pod-wave-bar"></span>
+              <span class="pod-wave-bar"></span><span class="pod-wave-bar"></span>
+              <span class="pod-wave-bar"></span>
+            </div>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ╔═══════════════╗
+     ║   CTA CIERRE  ║
+     ╚═══════════════╝ -->
+<section class="ncta has-spotlight">
+  <div class="ncta-inner">
+    <span class="slabel rv">Sigue el viaje</span>
+    <h2 class="ncta-title rv d1">Ahora que nos conoces,<br><span class="g">escúchanos</span>.</h2>
+    <p class="ncta-sub rv d2">Cada viernes un nuevo episodio. Hablamos sin rodeos sobre salud mental y principios bíblicos para que tu mochila sea más liviana.</p>
+    <a href="episodios.html" class="btn btn-gold rv d3">
+      <svg viewBox="0 0 16 16"><path d="M3 2l10 6-10 6V2z"/></svg>
+      Ver todos los episodios
+    </a>
+  </div>
+</section>
+
+<!-- ╔═══════════════╗
+     ║    MARQUEE    ║
+     ╚═══════════════╝ -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track" id="marqueeTrack"></div>
+</div>
+
+<!-- ╔═══════════════╗
+     ║    FOOTER     ║
+     ╚═══════════════╝ -->
+<footer class="footer" id="ntchile">
+  <div class="footer-in">
+    <div class="footer-top">
+      <div class="fbrand">
+  <a href="index.html" style="display: block; line-height: 0;">
+    <img src="assets/img/iso-e7-blanco.svg" alt="Estación 7">
+  </a>
+</div>
+      <div class="fsocs">
+        <a href="https://instagram.com/estacion7.cl" class="fsoc" target="_blank" aria-label="Instagram">
+          <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+        </a>
+        <a href="https://tiktok.com/@estacion7.cl" class="fsoc" target="_blank" aria-label="TikTok">
+          <svg viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+        </a>
+        <a href="https://youtube.com/@estacion7.cl" class="fsoc" target="_blank" aria-label="YouTube">
+          <svg viewBox="0 0 24 24"><path d="M23.495 6.205a3.007 3.007 0 00-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 00.527 6.205a31.247 31.247 0 00-.522 5.805 31.247 31.247 0 00.522 5.783 3.007 3.007 0 002.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 002.088-2.088 31.247 31.247 0 00.5-5.783 31.247 31.247 0 00-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>
+        </a>
+        <a href="https://open.spotify.com/show/estacion7" class="fsoc" target="_blank" aria-label="Spotify">
+          <svg viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+        </a>
+      </div>
+    </div>
+    <p class="footer-copy">© 2026 Estación 7</p>
+  </div>
+</footer>
+
+<!-- Back to top -->
+<button class="btt" id="btt" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Volver arriba">
+  <svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
+</button>
+
+<script>
+'use strict';
+
+/* ═══════════════════════════════════════════
+   PAGE LOAD ENTRANCE
+═══════════════════════════════════════════ */
+(function(){
+  function trigger(){ requestAnimationFrame(() => document.body.classList.add('loaded')); }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', trigger, { once: true });
+  } else {
+    trigger();
+  }
+  window.addEventListener('pageshow', (e) => {
+    if (e.persisted) {
+      document.body.classList.remove('loaded');
+      setTimeout(trigger, 30);
+    }
+  });
+})();
+
+/* ═══════════════════════════════════════════
+   UNIFIED SCROLL DISPATCHER
+═══════════════════════════════════════════ */
+const ScrollBus = (() => {
+  const subs = [];
+  let ticking = false;
+  function flush() {
+    const y = window.scrollY;
+    const vh = window.innerHeight;
+    for (let i = 0; i < subs.length; i++) subs[i](y, vh);
+    ticking = false;
+  }
+  function onScrollRaw() {
+    if (!ticking) { ticking = true; requestAnimationFrame(flush); }
+  }
+  window.addEventListener('scroll', onScrollRaw, { passive: true });
+  window.addEventListener('resize', onScrollRaw, { passive: true });
+  return {
+    add(fn){ subs.push(fn); fn(window.scrollY, window.innerHeight); },
+  };
+})();
+
+/* ═══════════════════════════════════════════
+   NAVBAR solid-on-scroll + mobile menu
+═══════════════════════════════════════════ */
+const nav = document.getElementById('nav');
+ScrollBus.add((y) => nav.classList.toggle('solid', y > 80));
+
+const burger  = document.getElementById('burger');
+const mobMenu = document.getElementById('mobMenu');
+const mobClose= document.getElementById('mobClose');
+function openMenu(){ burger.classList.add('open'); mobMenu.classList.add('open'); document.body.style.overflow='hidden'; }
+function closeMenu(){ burger.classList.remove('open'); mobMenu.classList.remove('open'); document.body.style.overflow=''; }
+burger.addEventListener('click', openMenu);
+mobClose.addEventListener('click', closeMenu);
+mobMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+
+/* ═══════════════════════════════════════════
+   SPOTLIGHT CURSOR (desktop only)
+═══════════════════════════════════════════ */
+(function(){
+  const reduce  = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isTouch = matchMedia('(hover: none) and (pointer: coarse)').matches;
+  const narrow  = matchMedia('(max-width: 900px)').matches;
+  if (reduce || isTouch || narrow) return;
+
+  const targets = Array.from(document.querySelectorAll('.has-spotlight'));
+  if (!targets.length) return;
+
+  let activeIdx = -1;
+  let rafId = 0;
+  let pendingEvent = null;
+
+  function process(e) {
+    let found = -1;
+    for (let i = 0; i < targets.length; i++) {
+      const r = targets[i].getBoundingClientRect();
+      if (e.clientY >= r.top && e.clientY <= r.bottom &&
+          e.clientX >= r.left && e.clientX <= r.right) {
+        found = i;
+        targets[i].style.setProperty('--sx', (e.clientX - r.left) + 'px');
+        targets[i].style.setProperty('--sy', (e.clientY - r.top)  + 'px');
+        break;
+      }
+    }
+    if (found !== activeIdx) {
+      if (activeIdx >= 0) targets[activeIdx].classList.remove('spot-on');
+      if (found    >= 0) targets[found].classList.add('spot-on');
+      activeIdx = found;
+    }
+  }
+  function onMove(e) {
+    pendingEvent = e;
+    if (!rafId) {
+      rafId = requestAnimationFrame(() => {
+        rafId = 0;
+        if (pendingEvent) process(pendingEvent);
+      });
+    }
+  }
+  window.addEventListener('mousemove', onMove, { passive: true });
+  window.addEventListener('mouseleave', () => {
+    if (activeIdx >= 0) { targets[activeIdx].classList.remove('spot-on'); activeIdx = -1; }
+  });
+})();
+
+/* ═══════════════════════════════════════════
+   SPOTLIGHT por podcaster: cambia color al entrar a un row
+═══════════════════════════════════════════ */
+(function(){
+  const isTouch = matchMedia('(hover: none) and (pointer: coarse)').matches;
+  if (isTouch) return;
+  const podSection = document.getElementById('podcasters');
+  if (!podSection) return;
+  const rows = podSection.querySelectorAll('.pod-row');
+  const SIG = {
+    aqua:'rgba(94,196,200,.20)',
+    gold:'rgba(201,162,39,.20)',
+    red :'rgba(217,75,62,.20)',
+  };
+  rows.forEach(row => {
+    const sig = row.dataset.sig || 'aqua';
+    const color = SIG[sig];
+    const grad =
+      'radial-gradient(circle 420px at var(--sx,50%) var(--sy,50%),'+
+      color+',rgba(0,0,0,0) 65%)';
+    row.addEventListener('mouseenter', () => {
+      podSection.style.setProperty('--spot-override', grad);
+      podSection.classList.add('spot-custom');
+    });
+    row.addEventListener('mouseleave', () => {
+      podSection.style.removeProperty('--spot-override');
+      podSection.classList.remove('spot-custom');
+    });
+  });
+  const style = document.createElement('style');
+  style.textContent =
+    '.pod.has-spotlight.spot-custom::after{'+
+    'background:var(--spot-override)!important;'+
+    'opacity:1!important;'+
+    'mix-blend-mode:lighten!important}';
+  document.head.appendChild(style);
+})();
+
+/* ═══════════════════════════════════════════
+   MARQUEE
+═══════════════════════════════════════════ */
+(function(){
+  const track = document.getElementById('marqueeTrack');
+  if (!track) return;
+  const PHRASES = [
+    'Estación 7',
+    'La verdad en tu trayecto',
+  ];
+
+  function buildBlock(){
+    const frag = document.createDocumentFragment();
+    PHRASES.forEach((txt) => {
+      const item = document.createElement('div');
+      item.className = 'marquee-item';
+      const span = document.createElement('span');
+      span.textContent = txt;
+      item.appendChild(span);
+      const dot = document.createElement('div');
+      dot.className = 'marquee-dot';
+      item.appendChild(dot);
+      frag.appendChild(item);
+    });
+    return frag;
+  }
+  function rebuild(){
+    track.innerHTML = '';
+    track.appendChild(buildBlock());
+    const blockWidth = track.scrollWidth;
+    const viewportW  = track.parentElement.offsetWidth;
+    const needed = Math.max(2, Math.ceil(viewportW / blockWidth) + 1);
+    for (let i = 1; i < needed; i++) track.appendChild(buildBlock());
+    const shiftPct = -(100 / needed);
+    track.style.setProperty('--marquee-shift', shiftPct + '%');
+  }
+  rebuild();
+  let resizeT;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeT);
+    resizeT = setTimeout(rebuild, 200);
+  });
+  const PALETTE = ['#c9a227','#5ec4c8','#fff5ee','#f3c54a'];
+  let palIdx = 0;
+  setInterval(() => {
+    palIdx = (palIdx + 1) % PALETTE.length;
+    track.querySelectorAll('.marquee-dot').forEach(d => {
+      d.style.background = PALETTE[palIdx];
+    });
+  }, 2400);
+})();
+
+/* ═══════════════════════════════════════════
+   BACK TO TOP
+═══════════════════════════════════════════ */
+(function(){
+  const btn = document.getElementById('btt');
+  if (!btn) return;
+  ScrollBus.add((y, vh) => {
+    btn.classList.toggle('show', y > vh * 0.6);
+  });
+})();
+
+/* ═══════════════════════════════════════════
+   SCROLL REVEALS  (.rv → .in)
+═══════════════════════════════════════════ */
+(function(){
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if(e.isIntersecting){ e.target.classList.add('in'); obs.unobserve(e.target); }
+    });
+  }, {threshold:.08, rootMargin:'0px 0px -40px 0px'});
+  document.querySelectorAll('.rv').forEach(el => obs.observe(el));
+})();
+
+/* ═══════════════════════════════════════════
+   PODCASTERS — entrada por fila (cada una al cruzar el viewport)
+   ── Antes observábamos el contenedor .pod-list y disparábamos las
+      3 filas con stagger sincronizado. Pero como el contenedor entra
+      al viewport con la primera fila, las filas 2 y 3 ya han animado
+      antes de que el usuario las vea.
+   ── Ahora cada .pod-row tiene su propio observer: anima cuando ELLA
+      misma cruza el viewport, no cuando lo hace la lista entera.
+═══════════════════════════════════════════ */
+(function(){
+  const rows = document.querySelectorAll('.pod-list .pod-row');
+  if (rows.length){
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting){
+          e.target.classList.add('in');
+          io.unobserve(e.target);
+        }
+      });
+    }, {
+      /* Se activa cuando 22% de la fila ya está dentro del viewport
+         y un poquito más (rootMargin negativo abajo) para que la
+         animación no arranque cuando apenas asoma el borde. */
+      threshold: 0.22,
+      rootMargin: '0px 0px -80px 0px'
+    });
+    rows.forEach(row => io.observe(row));
+  }
+
+  const podBg = document.getElementById('podBg');
+  if (podBg){
+    const io2 = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting){ podBg.classList.add('in'); io2.unobserve(podBg); }
+      });
+    }, {threshold:.3});
+    io2.observe(podBg);
+  }
+})();
+
+/* ═══════════════════════════════════════════
+   PARALLAX del título "Podcasters"
+   ── SOLO Z (zoom) controlado por scroll, según pedido del usuario.
+   ── Sin Y porque provocaba corte de letras al subir.
+   ── Sin mouse/touch parallax para mantenerlo limpio.
+   ── Curva ease-out: en el centro de la sección, escala máxima;
+      en los bordes, mínima. Respiración suave.
+═══════════════════════════════════════════ */
+(function(){
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) return;
+  const podBg = document.getElementById('podBg');
+  const podSection = document.getElementById('podcasters');
+  if (!podBg || !podSection) return;
+
+  const isMobile = matchMedia('(max-width: 768px)').matches;
+
+  function onScroll(){
+    const rect = podSection.getBoundingClientRect();
+    const vh = window.innerHeight;
+    const sectionH = rect.height;
+    const sectionTop = rect.top;
+    const total = vh + sectionH;
+    let p = (vh - sectionTop) / total;
+    p = Math.max(0, Math.min(1, p));
+
+    /* Rango ampliado para que el zoom se sienta más fuerte.
+       Antes: desktop 0.92→1.06, mobile 0.88→1.08 (cambio sutil).
+       Ahora: desktop 0.84→1.22, mobile 0.80→1.24 — la palabra
+       se ve claramente "respirar" durante el scroll. */
+    const minScale = isMobile ? 0.80 : 0.84;
+    const maxScale = isMobile ? 1.24 : 1.22;
+    const distFromCenter = Math.abs(p - 0.5) * 2;
+    const ease = 1 - distFromCenter * distFromCenter;
+    const scale = minScale + ease * (maxScale - minScale);
+
+    podBg.style.setProperty('--par-scale', scale.toFixed(3));
+  }
+  ScrollBus.add(onScroll);
+})();
+
+/* ═══════════════════════════════════════════
+   PARTÍCULAS GLOBALES (canvas)
+   ── Puntos pequeños que derivan despacio por todo el viewport.
+   ── Performance: ~45 partículas, sin trails, redraw a 60fps.
+   ── mix-blend-mode:screen en CSS hace que sólo aporten luz.
+═══════════════════════════════════════════ */
+(function(){
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const canvas = document.getElementById('pageParticles');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d', { alpha:true });
+  if (!ctx) return;
+
+  const COUNT = matchMedia('(max-width: 768px)').matches ? 28 : 48;
+  /* Paleta sutil del proyecto */
+  const PALETTE = [
+    [94, 196, 200],   // aqua
+    [201, 162, 39],   // gold
+    [237, 241, 242],  // light
+    [217, 75, 62],    // red (poco)
+  ];
+
+  let w = 0, h = 0, dpr = 1;
+  const particles = [];
+
+  function resize(){
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    w = window.innerWidth;
+    h = window.innerHeight;
+    canvas.width  = Math.floor(w * dpr);
+    canvas.height = Math.floor(h * dpr);
+    canvas.style.width  = w + 'px';
+    canvas.style.height = h + 'px';
+    /* Reset transform y aplica DPR para coords en CSS px */
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  resize();
+  window.addEventListener('resize', resize, { passive:true });
+
+  function spawn(){
+    for (let i = 0; i < COUNT; i++){
+      const c = PALETTE[(Math.random() * PALETTE.length) | 0];
+      particles.push({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        r: Math.random() * 1.6 + 0.5,
+        vx: (Math.random() - 0.5) * 0.12,
+        vy: (Math.random() - 0.5) * 0.10 - 0.06,    /* leve deriva hacia arriba */
+        a: Math.random() * 0.35 + 0.12,
+        c,
+        pulse: Math.random() * Math.PI * 2,
+        pulseRate: 0.008 + Math.random() * 0.014,
+      });
+    }
+  }
+  spawn();
+
+  let running = !reduce;
+  function loop(){
+    if (!running) return;
+    ctx.clearRect(0, 0, w, h);
+    for (let i = 0; i < particles.length; i++){
+      const p = particles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      p.pulse += p.pulseRate;
+      /* Wrap-around suave */
+      if (p.x < -10) p.x = w + 10;
+      else if (p.x > w + 10) p.x = -10;
+      if (p.y < -10) p.y = h + 10;
+      else if (p.y > h + 10) p.y = -10;
+
+      const alpha = p.a * (0.55 + Math.sin(p.pulse) * 0.45);
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(' + p.c[0] + ',' + p.c[1] + ',' + p.c[2] + ',' + alpha + ')';
+      ctx.fill();
+    }
+    requestAnimationFrame(loop);
+  }
+  /* En reduce-motion, dibujamos un único frame estático (sin loop) */
+  if (reduce){
+    ctx.clearRect(0, 0, w, h);
+    for (const p of particles){
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(' + p.c[0] + ',' + p.c[1] + ',' + p.c[2] + ',' + p.a + ')';
+      ctx.fill();
+    }
+  } else {
+    requestAnimationFrame(loop);
+  }
+
+  /* Pausa el loop cuando la pestaña está oculta */
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden){
+      running = false;
+    } else if (!reduce){
+      running = true;
+      requestAnimationFrame(loop);
+    }
+  });
+})();
+
+/* ═══════════════════════════════════════════
+   VIDEO PLAY HANDLER
+   ── Click / Enter / Space en el placeholder → reemplaza el contenido
+      del .nh-vid por un <iframe> de YouTube con autoplay.
+   ── Iframe lleva todos los allow (clipboard-write, web-share,
+      picture-in-picture, etc.) y allowfullscreen → pantalla completa
+      desde el control nativo de YouTube funciona OK.
+   ── Después del primer play se desenganchan los listeners para que
+      clicks accidentales sobre el contenedor no recreen el iframe.
+═══════════════════════════════════════════ */
+(function(){
+  const vid = document.getElementById('nhVid');
+  if (!vid) return;
+
+  const EMBED_URL =
+    'https://www.youtube.com/embed/cHo0RqadL9c' +
+    '?autoplay=1&rel=0&modestbranding=1&playsinline=1';
+
+  function onKey(e){
+    if (e.key === 'Enter' || e.key === ' '){
+      e.preventDefault();
+      playVideo();
+    }
+  }
+
+  function playVideo(){
+    const iframe = document.createElement('iframe');
+    iframe.src = EMBED_URL;
+    iframe.title = 'Estación 7 — Video presentación';
+    iframe.setAttribute('frameborder', '0');
+    iframe.setAttribute(
+      'allow',
+      'accelerometer; autoplay; clipboard-write; encrypted-media; ' +
+      'gyroscope; picture-in-picture; web-share'
+    );
+    iframe.allowFullscreen = true;
+    iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+    iframe.style.cssText =
+      'position:absolute;inset:0;width:100%;height:100%;border:0;z-index:10';
+
+    /* Vaciar el contenedor (thumbnail, badges, play button, overlays)
+       y montar el iframe encima del background. */
+    vid.innerHTML = '';
+    vid.appendChild(iframe);
+    vid.style.cursor = 'default';
+    vid.setAttribute('aria-label', 'Video de presentación reproduciéndose');
+    vid.removeAttribute('role');
+    vid.removeAttribute('tabindex');
+
+    /* Soltamos los listeners: ya no hace falta volver a "iniciar"
+       el reproductor, YouTube maneja todo dentro del iframe. */
+    vid.removeEventListener('click', playVideo);
+    vid.removeEventListener('keydown', onKey);
+  }
+
+  vid.addEventListener('click', playVideo);
+  vid.addEventListener('keydown', onKey);
+})();
+
+/* ═══════════════════════════════════════════
+   AUDIO POR CONDUCTOR
+   ── Click en cualquier zona de la fila (silueta, name-pill, bar,
+      descripción) reproduce el audio asociado al conductor.
+   ── Política: SOLO UNA voz a la vez.
+      · Click en otra fila    → pausa la actual (preserva posición),
+                                arranca la nueva desde el inicio.
+      · Click en la misma fila mientras suena → reinicia desde 0.
+      · Click en una pausada  → reanuda desde donde se pausó.
+   ── Mapping por data-sig:
+        aqua → voz-1.mp3   (Podcaster 1)
+        gold → voz-sofia.mp3
+        red  → voz-damian.mp3
+   ── Visual: la fila activa recibe .is-playing (CSS lo refleja).
+═══════════════════════════════════════════ */
+(function(){
+  const SOURCES = {
+    aqua: 'assets/podcasters/voz-1.mp3',
+    gold: 'assets/podcasters/voz-sofia.mp3',
+    red:  'assets/podcasters/voz-damian.mp3',
+  };
+
+  const rows = document.querySelectorAll('.pod-list .pod-row');
+  if (!rows.length) return;
+
+  const audios = Object.create(null);   // sig → HTMLAudioElement
+  let activeSig = null;
+
+  function updateRowStates(){
+    rows.forEach(r => {
+      const sig = r.dataset.sig;
+      r.classList.toggle('is-playing', sig === activeSig);
+    });
+  }
+
+  function makeAudio(sig){
+    const a = new Audio(SOURCES[sig]);
+    a.preload = 'metadata';
+    a.addEventListener('ended', () => {
+      if (activeSig === sig){
+        activeSig = null;
+        updateRowStates();
+      }
+    });
+    /* Si el archivo no carga, limpiamos estado para no quedarse
+       con la fila marcada como "is-playing" sin sonar nada */
+    a.addEventListener('error', () => {
+      console.warn('[Estación 7] No se pudo cargar el audio:', SOURCES[sig]);
+      if (activeSig === sig){
+        activeSig = null;
+        updateRowStates();
+      }
+    });
+    return a;
+  }
+
+  function play(sig){
+    if (!SOURCES[sig]) return;
+
+    /* Pausa todas las demás (preservando su posición para que un
+       futuro click reanude donde quedaron). */
+    for (const key in audios){
+      if (key !== sig && audios[key] && !audios[key].paused){
+        audios[key].pause();
+      }
+    }
+
+    if (!audios[sig]) audios[sig] = makeAudio(sig);
+    const a = audios[sig];
+
+    /* Reglas de currentTime:
+       - Si está sonando ahora → reiniciar desde 0 (re-click intencional)
+       - Si está pausada      → reanudar (no tocamos currentTime)
+       - Si terminó (ended)   → empezar desde 0
+       - Primera vez          → currentTime ya es 0 */
+    if (!a.paused){
+      a.currentTime = 0;
+    } else if (a.ended){
+      a.currentTime = 0;
+    }
+
+    const promise = a.play();
+    if (promise && typeof promise.then === 'function'){
+      promise.catch(err => {
+        console.warn('[Estación 7] Audio play falló:', err);
+        if (activeSig === sig){
+          activeSig = null;
+          updateRowStates();
+        }
+      });
+    }
+
+    activeSig = sig;
+    updateRowStates();
+  }
+
+  rows.forEach(row => {
+    const sig = row.dataset.sig;
+    if (!SOURCES[sig]) return;
+
+    /* Toda la fila (silueta + name-pill + bar + descripción) es
+       clickeable. Un solo handler en la fila aprovecha bubbling
+       de cualquier descendiente. */
+    row.addEventListener('click', () => play(sig));
+
+    /* Accesibilidad: la fila se comporta como botón */
+    row.setAttribute('role', 'button');
+    row.setAttribute('tabindex', '0');
+    row.setAttribute('aria-label',
+      'Escuchar presentación de ' +
+      (row.querySelector('.pod-namepill')?.textContent.trim() || 'conductor'));
+    row.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' '){
+        e.preventDefault();
+        play(sig);
+      }
+    });
+  });
+
+  /* Limpieza: si el usuario abandona la pestaña, dejamos sonando
+     el audio activo (comportamiento estándar de <audio>). Si quieres
+     pausa automática en blur descomenta esto:
+       document.addEventListener('visibilitychange', () => {
+         if (document.hidden && activeSig && audios[activeSig]){
+           audios[activeSig].pause();
+         }
+       });
+  */
+})();
+
+</script>
+</body>
+</html>
