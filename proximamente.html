@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Estacion 7 - Proximamente</title>
+<meta name="description" content="La verdad en tu trayecto. Lanzamiento el 19 de junio.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@100;200;300;400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#071820;--deep:#0d2c3a;--teal:#15485e;
+  --gold:#c9a227;--gold-lt:#dbb82e;--aqua:#5ec4c8;
+  --light:#edf1f2;--muted:rgba(237,241,242,.52);
+  --f:'Kanit',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;font-family:var(--f);background:var(--navy);color:var(--light);overflow:hidden}
+
+/* FOTO DE FONDO — assets/img/que-es.jpg */
+.bg-photo{
+  position:fixed;inset:0;z-index:0;
+  background-image:url('assets/img/que-es.jpg');
+  background-size:cover;
+  background-position:center center;
+  background-repeat:no-repeat;
+}
+.bg-photo::after{
+  content:'';position:absolute;inset:0;
+  background:
+    linear-gradient(180deg,rgba(7,24,32,.65) 0%,rgba(7,24,32,.48) 45%,rgba(7,24,32,.75) 100%),
+    radial-gradient(ellipse 80% 85% at 50% 50%,transparent 0%,rgba(7,24,32,.5) 100%);
+}
+
+/* SVG ART — sutil encima de la foto */
+.bg-art{position:fixed;inset:0;z-index:1;opacity:.05;pointer-events:none;overflow:hidden}
+
+/* ANILLOS AMBIENTAL */
+.pulse-ring{
+  position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+  border-radius:50%;border:1px solid rgba(94,196,200,.07);
+  pointer-events:none;z-index:1;animation:pulse 5s ease-in-out infinite;
+}
+.pr1{width:460px;height:460px}
+.pr2{width:720px;height:720px;animation-delay:1.6s}
+.pr3{width:1020px;height:1020px;animation-delay:3.2s}
+
+/* SCANLINES */
+.scanlines{
+  position:fixed;inset:0;z-index:2;pointer-events:none;
+  background:repeating-linear-gradient(to bottom,transparent 0,transparent 3px,rgba(0,0,0,.04) 3px,rgba(0,0,0,.04) 4px);
+}
+
+/* CANVAS */
+.canvas{
+  position:fixed;inset:0;z-index:3;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:24px 20px 40px;
+}
+
+/* LOGO */
+.logo-wrap{
+  margin-bottom:clamp(24px,4.5vh,48px);
+  opacity:0;animation:fadeUp .9s cubic-bezier(.16,1,.3,1) .15s forwards;
+}
+.logo-wrap img{
+  height:clamp(32px,4.5vw,48px);width:auto;display:block;
+  filter:drop-shadow(0 2px 14px rgba(0,0,0,.6));
+}
+
+/* EYEBROW */
+.eyebrow{
+  font-weight:300;font-size:clamp(.62rem,.9vw,.78rem);
+  letter-spacing:.32em;text-transform:uppercase;color:var(--gold);
+  margin-bottom:clamp(12px,2vh,18px);
+  opacity:0;animation:fadeUp .9s cubic-bezier(.16,1,.3,1) .32s forwards;
+}
+
+/* TITULAR */
+.headline{
+  font-weight:900;font-size:clamp(2.8rem,8.5vw,5.8rem);
+  line-height:.96;letter-spacing:-.035em;text-align:center;
+  text-shadow:0 2px 24px rgba(0,0,0,.45);
+  margin-bottom:clamp(32px,5.5vh,54px);
+  opacity:0;animation:fadeUp .9s cubic-bezier(.16,1,.3,1) .48s forwards;
+}
+.headline .g{color:var(--gold)}
+.headline .a{color:var(--aqua)}
+
+/* COUNTDOWN */
+.countdown{
+  display:flex;align-items:flex-start;gap:clamp(5px,1.2vw,10px);
+  margin-bottom:clamp(10px,1.5vh,18px);
+  opacity:0;animation:fadeUp .9s cubic-bezier(.16,1,.3,1) .62s forwards;
+}
+.cd-unit{display:flex;flex-direction:column;align-items:center;gap:clamp(6px,1vh,10px)}
+.cd-box{
+  min-width:clamp(68px,15vw,120px);
+  padding:clamp(12px,2.5vh,20px) clamp(8px,2vw,14px);
+  background:rgba(7,24,32,.52);
+  backdrop-filter:blur(24px) saturate(1.3);
+  -webkit-backdrop-filter:blur(24px) saturate(1.3);
+  border:1px solid rgba(94,196,200,.18);border-radius:clamp(12px,1.8vw,18px);
+  position:relative;overflow:hidden;
+}
+.cd-box::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(94,196,200,.38),transparent);
+}
+.cd-box::after{
+  content:'';position:absolute;bottom:0;left:10%;right:10%;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(201,162,39,.12),transparent);
+}
+.cd-num{
+  font-weight:800;font-size:clamp(2.4rem,6.5vw,4.6rem);
+  line-height:1;letter-spacing:-.04em;color:var(--gold);
+  font-variant-numeric:tabular-nums;text-align:center;display:block;
+  transition:transform .14s cubic-bezier(.34,1.56,.64,1);
+}
+.cd-num.tick{transform:scale(1.1) translateY(-2px)}
+.cd-label{
+  font-weight:300;font-size:clamp(.5rem,1vw,.66rem);
+  letter-spacing:.22em;text-transform:uppercase;
+  color:rgba(237,241,242,.42);text-align:center;
+}
+.cd-sep{
+  font-weight:200;font-size:clamp(1.8rem,5vw,4rem);
+  color:rgba(94,196,200,.38);line-height:1;
+  align-self:flex-start;margin-top:clamp(12px,2.5vh,20px);user-select:none;
+}
+
+/* FECHA */
+.launch-date{
+  font-weight:300;font-size:clamp(.6rem,.85vw,.74rem);
+  letter-spacing:.2em;text-transform:uppercase;color:rgba(237,241,242,.35);
+  margin-bottom:clamp(28px,5vh,50px);
+  opacity:0;animation:fadeUp .9s cubic-bezier(.16,1,.3,1) .78s forwards;
+}
+.launch-date em{font-style:normal;color:rgba(201,162,39,.7)}
+
+/* SOCIAL */
+.social{
+  display:flex;gap:10px;align-items:center;
+  opacity:0;animation:fadeUp .9s cubic-bezier(.16,1,.3,1) .92s forwards;
+}
+.soc-btn{
+  width:42px;height:42px;border-radius:50%;
+  border:1px solid rgba(94,196,200,.22);background:rgba(7,24,32,.48);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--light);text-decoration:none;
+  transition:border-color .22s,background .22s,transform .18s,color .22s;
+}
+.soc-btn:hover{border-color:var(--gold);background:rgba(201,162,39,.18);color:var(--gold);transform:translateY(-3px)}
+.soc-btn svg{width:17px;height:17px;fill:currentColor;display:block}
+
+/* ESTADO LANZADO */
+#launchedMsg{display:none;flex-direction:column;align-items:center;gap:18px;text-align:center}
+#launchedMsg.show{display:flex}
+.launched-icon{font-size:3rem;line-height:1}
+.launched-h{font-weight:900;font-size:clamp(2rem,6vw,4rem);letter-spacing:-.03em;color:var(--gold);text-shadow:0 2px 20px rgba(0,0,0,.5)}
+.launched-p{color:var(--muted);font-weight:300}
+.btn-launch{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--f);font-weight:700;font-size:.95rem;letter-spacing:.04em;
+  padding:15px 36px;border-radius:50px;background:var(--gold);color:var(--navy);
+  border:none;cursor:pointer;text-decoration:none;margin-top:6px;
+  transition:background .2s,transform .15s,box-shadow .2s;
+  box-shadow:0 8px 28px rgba(201,162,39,.32);
+}
+.btn-launch:hover{background:var(--gold-lt);transform:translateY(-2px);box-shadow:0 14px 36px rgba(201,162,39,.42)}
+
+/* ANIMACIONES */
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(22px);filter:blur(7px)}
+  to  {opacity:1;transform:translateY(0);filter:blur(0)}
+}
+@keyframes pulse{
+  0%,100%{opacity:.18;transform:translate(-50%,-50%) scale(1)}
+  50%{opacity:.06;transform:translate(-50%,-50%) scale(1.04)}
+}
+
+/* RESPONSIVE */
+@media(max-width:480px){
+  .headline{font-size:clamp(2.4rem,11vw,3.2rem)}
+  .countdown{gap:4px}
+  .bg-photo{background-position:60% center}
+}
+@media(max-height:620px){
+  .headline{margin-bottom:20px}
+  .launch-date{margin-bottom:20px}
+}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms !important;transition-duration:.01ms !important}}
+</style>
+</head>
+<body>
+
+<div class="bg-photo"></div>
+<div class="pulse-ring pr1"></div>
+<div class="pulse-ring pr2"></div>
+<div class="pulse-ring pr3"></div>
+
+<svg class="bg-art" viewBox="0 0 1400 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="dotFade" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="white" stop-opacity="0"/>
+      <stop offset="55%" stop-color="white" stop-opacity=".35"/>
+      <stop offset="100%" stop-color="white" stop-opacity="1"/>
+    </radialGradient>
+    <mask id="dotMask"><rect width="1400" height="900" fill="url(#dotFade)"/></mask>
+    <pattern id="dots" x="0" y="0" width="50" height="50" patternUnits="userSpaceOnUse">
+      <circle cx="25" cy="25" r="1.5" fill="#c9a227"/>
+    </pattern>
+  </defs>
+  <line x1="0" y1="0" x2="700" y2="450" stroke="#5ec4c8" stroke-width="1.2"/>
+  <line x1="1400" y1="0" x2="700" y2="450" stroke="#5ec4c8" stroke-width="1.2"/>
+  <line x1="0" y1="900" x2="700" y2="450" stroke="#5ec4c8" stroke-width="1.2"/>
+  <line x1="1400" y1="900" x2="700" y2="450" stroke="#5ec4c8" stroke-width="1.2"/>
+  <line x1="0" y1="450" x2="700" y2="450" stroke="#5ec4c8" stroke-width=".55"/>
+  <line x1="700" y1="0" x2="700" y2="450" stroke="#5ec4c8" stroke-width=".55"/>
+  <line x1="1400" y1="450" x2="700" y2="450" stroke="#5ec4c8" stroke-width=".55"/>
+  <line x1="700" y1="900" x2="700" y2="450" stroke="#5ec4c8" stroke-width=".55"/>
+  <ellipse cx="700" cy="450" rx="55" ry="65" fill="none" stroke="#c9a227" stroke-width="1"/>
+  <ellipse cx="700" cy="450" rx="115" ry="135" fill="none" stroke="#c9a227" stroke-width=".7"/>
+  <ellipse cx="700" cy="450" rx="205" ry="240" fill="none" stroke="#5ec4c8" stroke-width=".5"/>
+  <ellipse cx="700" cy="450" rx="330" ry="385" fill="none" stroke="#5ec4c8" stroke-width=".4"/>
+  <ellipse cx="700" cy="450" rx="490" ry="570" fill="none" stroke="#c9a227" stroke-width=".28"/>
+  <rect width="1400" height="900" fill="url(#dots)" mask="url(#dotMask)" opacity=".5"/>
+</svg>
+
+<div class="scanlines"></div>
+
+<div class="canvas">
+
+  <div id="launchedMsg">
+    <div class="launched-icon">&#x1F680;</div>
+    <h2 class="launched-h">Ya estamos en vivo!</h2>
+    <p class="launched-p">El lanzamiento ha comenzado. Entra al podcast ahora.</p>
+    <a href="/" class="btn-launch">Entrar al sitio</a>
+  </div>
+
+  <div id="mainContent" style="display:flex;flex-direction:column;align-items:center;width:100%">
+
+    <div class="logo-wrap">
+      <img src="assets/img/logo-e7-blanco1.svg" alt="Estacion 7">
+    </div>
+
+    <span class="eyebrow">Proximamente</span>
+
+    <h1 class="headline">
+      La <span class="g">verdad</span><br>
+      en tu <span class="a">trayecto</span>
+    </h1>
+
+    <div class="countdown" id="countdown">
+      <div class="cd-unit">
+        <div class="cd-box"><span class="cd-num" id="cd-d">04</span></div>
+        <span class="cd-label">Dias</span>
+      </div>
+      <div class="cd-sep" aria-hidden="true">:</div>
+      <div class="cd-unit">
+        <div class="cd-box"><span class="cd-num" id="cd-h">00</span></div>
+        <span class="cd-label">Horas</span>
+      </div>
+      <div class="cd-sep" aria-hidden="true">:</div>
+      <div class="cd-unit">
+        <div class="cd-box"><span class="cd-num" id="cd-m">00</span></div>
+        <span class="cd-label">Min</span>
+      </div>
+      <div class="cd-sep" aria-hidden="true">:</div>
+      <div class="cd-unit">
+        <div class="cd-box"><span class="cd-num" id="cd-s">00</span></div>
+        <span class="cd-label">Seg</span>
+      </div>
+    </div>
+
+    <div class="launch-date">
+      Lanzamiento - <em>Viernes 19 de junio - 19:00 h</em>
+    </div>
+
+    <div class="social">
+      <a href="https://instagram.com/estacion7.cl" class="soc-btn" target="_blank" rel="noopener" aria-label="Instagram">
+        <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+      </a>
+      <a href="https://tiktok.com/@estacion7.cl" class="soc-btn" target="_blank" rel="noopener" aria-label="TikTok">
+        <svg viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+      </a>
+      <a href="https://youtube.com/@estacion7.cl" class="soc-btn" target="_blank" rel="noopener" aria-label="YouTube">
+        <svg viewBox="0 0 24 24"><path d="M23.495 6.205a3.007 3.007 0 00-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 00.527 6.205a31.247 31.247 0 00-.522 5.805 31.247 31.247 0 00.522 5.783 3.007 3.007 0 002.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 002.088-2.088 31.247 31.247 0 00.5-5.783 31.247 31.247 0 00-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>
+      </a>
+      <a href="https://open.spotify.com/show/estacion7" class="soc-btn" target="_blank" rel="noopener" aria-label="Spotify">
+        <svg viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+      </a>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+/* TARGET: Viernes 19 junio 2026, 19:00 CLT = UTC-4 → 23:00 UTC */
+const TARGET = new Date('2026-06-19T23:00:00Z');
+
+function pad(n){ return String(n).padStart(2,'0') }
+
+function updateUnit(id, val){
+  const el = document.getElementById(id);
+  if (!el) return;
+  const txt = pad(val);
+  if (el.textContent !== txt){
+    el.textContent = txt;
+    el.classList.remove('tick');
+    void el.offsetWidth;
+    el.classList.add('tick');
+    setTimeout(function(){ el.classList.remove('tick') }, 220);
+  }
+}
+
+function tick(){
+  var diff = TARGET.getTime() - Date.now();
+  if (diff <= 0){
+    document.getElementById('mainContent').style.display = 'none';
+    document.getElementById('launchedMsg').classList.add('show');
+    clearInterval(timer);
+    return;
+  }
+  var s = Math.floor(diff / 1000);
+  updateUnit('cd-d', Math.floor(s / 86400));
+  updateUnit('cd-h', Math.floor((s % 86400) / 3600));
+  updateUnit('cd-m', Math.floor((s % 3600) / 60));
+  updateUnit('cd-s', s % 60);
+}
+
+var timer = setInterval(tick, 1000);
+tick();
+</script>
+</body>
+</html>
