@@ -97,7 +97,8 @@ body.loaded .nav{
 .slide{pointer-events:none}
 .s-bg{
   position:absolute;inset:0;z-index:0;
-  background-size:115% auto;background-position:center;
+  background-size:cover;background-position:center;
+  background-repeat:no-repeat;
   will-change:transform,background-position;
 }
 /* Dark gradient overlay on top of each photo for legibility */
@@ -107,7 +108,7 @@ body.loaded .nav{
     linear-gradient(180deg, rgba(7,24,32,.55) 0%, rgba(7,24,32,.35) 50%, rgba(7,24,32,.78) 100%),
     radial-gradient(ellipse 90% 85% at 50% 50%, transparent 0%, rgba(7,24,32,.55) 100%);
 }
-.s1 .s-bg{background-image:url('assets/img/imagen-hero.jpeg')}
+.s1 .s-bg{background-image:url('assets/img/imagen-hero.jpg')}
 .s2 .s-bg{background-image:url('assets/img/imagen-hero-2.jpeg')}
 .s3 .s-bg{background-image:url('assets/img/imagen-hero-3.jpeg')}
 .s-art{position:absolute;inset:0;z-index:1;opacity:.055;pointer-events:none}
@@ -1174,9 +1175,10 @@ a.epi-cta-link{text-decoration:none;cursor:pointer}
   /* Hero slides: sized so the image's full height fills viewport
      while remaining wider than the screen → enables horizontal pan */
   .s-bg{
-    background-size:auto 110%;
+    background-size:cover;
     background-position-x:var(--pan-x, 0%);
     background-position-y:center;
+    background-repeat:no-repeat;
     transform:none!important;
   }
 
@@ -1314,9 +1316,9 @@ a.epi-cta-link{text-decoration:none;cursor:pointer}
     <div class="sc">
       <span class="eyebrow">Nuevo episodio disponible</span>
       <h1 class="htitle">Tu pausa necesaria<br>para el <span class="g">caos</span> en la ciudad</h1>
-      <a href="episodios.html#ep=01" class="btn btn-gold">
+      <a href="episodios.html" class="btn btn-gold">
         <svg viewBox="0 0 16 16"><path d="M3 2l10 6-10 6V2z"/></svg>
-        Ver episodio más reciente
+        Explorar episodios
       </a>
     </div>
   </div>
