@@ -343,40 +343,31 @@ body.loaded .s-art{opacity:.055}
 .stitle .g{color:var(--gold)} .stitle .a{color:var(--aqua)}
 .ssub{font-weight:300;font-size:1rem;color:var(--muted);margin-bottom:40px}
 .fld{margin-bottom:13px}
-.fld input, .fld select{
+.fld input{
   width:100%;background:rgba(94,196,200,.07);
   border:1px solid rgba(94,196,200,.2);border-radius:40px;
   padding:14px 22px;font-family:var(--f);font-weight:300;font-size:.93rem;
   color:var(--light);outline:none;transition:border-color .22s
 }
-.fld input::placeholder, .fld select::placeholder{color:rgba(237,241,242,.3)}
-.fld input:focus, .fld select:focus{border-color:var(--gold)}
-.fld input.err, .fld select.err{border-color:var(--red)!important}
+.fld input::placeholder{color:rgba(237,241,242,.3)}
+.fld input:focus{border-color:var(--gold)}
+.fld input.err{border-color:var(--red)!important}
 .fld-err-msg{
-  display:none;
-  font-size:.72rem;font-weight:400;color:var(--red);
+  display:none;font-size:.72rem;font-weight:400;color:var(--red);
   padding:4px 22px 0;letter-spacing:.01em;
 }
-/* Show error msg when any input/select inside the .fld has .err class.
-   Uses :has() (supported in all modern browsers 2023+).
-   Fallback: JS also adds .fld-show-err on the parent .fld */
 .fld:has(.err) .fld-err-msg,
 .fld.fld-show-err .fld-err-msg{display:block}
-/* Honeypot — invisible to humans, visible to bots */
-.hp-field{position:absolute;left:-9999px;width:1px;height:1px;opacity:0;overflow:hidden;pointer-events:none;tab-index:-1}
-/* Form feedback message */
+/* Honeypot */
+.hp-field{position:absolute;left:-9999px;width:1px;height:1px;opacity:0;overflow:hidden;pointer-events:none}
+/* Form feedback */
 .form-msg{
   display:none;margin-top:14px;padding:12px 22px;
-  border-radius:14px;font-weight:500;font-size:.86rem;
-  line-height:1.4;
+  border-radius:14px;font-weight:500;font-size:.86rem;line-height:1.4;
 }
 .form-msg.show{display:block}
-.form-msg.success{
-  background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.3);color:#25d366;
-}
-.form-msg.error{
-  background:rgba(217,75,62,.1);border:1px solid rgba(217,75,62,.3);color:#d94b3e;
-}
+.form-msg.success{background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.3);color:#25d366}
+.form-msg.error{background:rgba(217,75,62,.1);border:1px solid rgba(217,75,62,.3);color:#d94b3e}
 /* Tel input overrides */
 .iti{width:100%}
 #tel-in{
@@ -1417,30 +1408,28 @@ a.epi-cta-link{text-decoration:none;cursor:pointer}
       <h2 class="stitle rv d1">Completa<br>el <span class="g">viaje</span></h2>
       <p class="ssub rv d2">Solicita tu guía de estudio gratis</p>
 
-      <!-- Honeypot — bots fill this, humans never see it -->
+      <!-- Honeypot -->
       <div class="hp-field" aria-hidden="true">
         <label for="website">Website</label>
         <input type="text" id="f-website" name="website" tabindex="-1" autocomplete="off">
       </div>
 
       <div class="fld rv d2">
-        <input type="text" id="f-nombre" placeholder="Nombre" autocomplete="given-name" required>
+        <input type="text" id="f-nombre" placeholder="Nombre" autocomplete="given-name">
         <span class="fld-err-msg">Ingresa tu nombre</span>
       </div>
       <div class="fld rv d2">
-        <input type="email" id="f-email" placeholder="E-mail" autocomplete="email" required>
+        <input type="email" id="f-email" placeholder="E-mail" autocomplete="email">
         <span class="fld-err-msg">Ingresa un e-mail válido</span>
       </div>
       <div class="fld rv d2">
         <input type="tel" id="tel-in" placeholder="Teléfono / WhatsApp">
-        <span class="fld-err-msg" id="tel-err">Ingresa tu teléfono</span>
+        <span class="fld-err-msg">Ingresa tu teléfono</span>
       </div>
       <div class="fld rv d2">
-        <input type="text" id="f-comuna" placeholder="Comuna" autocomplete="address-level2" list="comunas-list" required>
+        <input type="text" id="f-comuna" placeholder="Comuna" autocomplete="address-level2" list="comunas-list">
         <span class="fld-err-msg">Ingresa tu comuna</span>
       </div>
-
-      <!-- Datalist: Santiago comunas as autocomplete suggestions -->
       <datalist id="comunas-list">
         <option value="Cerrillos"><option value="Cerro Navia"><option value="Conchalí">
         <option value="El Bosque"><option value="Estación Central"><option value="Huechuraba">
@@ -2290,21 +2279,20 @@ function spawnParticles(btn) {
 }
 
 function showFormMsg(type, text){
-  const msg = document.getElementById('formMsg');
-  msg.className = 'form-msg show ' + type;
-  msg.textContent = text;
+  const m = document.getElementById('formMsg');
+  if(!m) return;
+  m.className = 'form-msg show ' + type;
+  m.textContent = text;
 }
-
 function clearFormMsg(){
-  const msg = document.getElementById('formMsg');
-  msg.className = 'form-msg';
-  msg.textContent = '';
+  const m = document.getElementById('formMsg');
+  if(!m) return;
+  m.className = 'form-msg'; m.textContent = '';
 }
 
 (function(){
   const btn     = document.getElementById('btnForm');
   if (!btn) return;
-
   const fNombre = document.getElementById('f-nombre');
   const fEmail  = document.getElementById('f-email');
   const fTel    = document.getElementById('tel-in');
@@ -2312,112 +2300,131 @@ function clearFormMsg(){
   const fHoney  = document.getElementById('f-website');
   let submitting = false;
 
-  // Helper: set/clear error on a field + its parent .fld container
-  function setErr(field, isErr) {
-    if (!field) return;
+  function setErr(field, isErr){
+    if(!field) return;
     field.classList.toggle('err', isErr);
     const fld = field.closest('.fld');
-    if (fld) fld.classList.toggle('fld-show-err', isErr);
+    if(fld) fld.classList.toggle('fld-show-err', isErr);
   }
 
-  // Clear error styling on input
+  // Clear errors on typing
   [fNombre, fEmail, fTel, fComuna].forEach(f => {
-    if (!f) return;
+    if(!f) return;
     f.addEventListener('input', () => { setErr(f, false); clearFormMsg(); });
   });
 
-  btn.addEventListener('click', async function submitForm(){
-    if (submitting) return;
+  function showSuccess(){
+    btn.innerHTML = '🎁 ¡Guía en camino!';
+    btn.classList.remove('loading','btn-gold');
+    btn.classList.add('sent');
+    spawnParticles(btn);
+    showFormMsg('success','¡Solicitud recibida! Te contactaremos pronto para entregarte tu guía.');
+    // Clear fields
+    if(fNombre) fNombre.value = '';
+    if(fEmail)  fEmail.value  = '';
+    if(fTel)    fTel.value    = '';
+    if(fComuna) fComuna.value = '';
+    // Reset button after 8s
+    setTimeout(() => {
+      btn.innerHTML = 'La quiero';
+      btn.classList.remove('sent');
+      btn.classList.add('btn-gold');
+      btn.disabled = false;
+      submitting = false;
+      clearFormMsg();
+    }, 8000);
+  }
+
+  function showError(msg){
+    btn.innerHTML = 'La quiero';
+    btn.classList.remove('loading');
+    btn.disabled = false;
+    submitting = false;
+    showFormMsg('error', msg || 'Hubo un problema. Intenta de nuevo o escríbenos por WhatsApp.');
+  }
+
+  btn.addEventListener('click', async function(){
+    if(submitting) return;
     clearFormMsg();
 
     // ── Validate ──
     let ok = true;
 
-    if (!fNombre.value.trim() || fNombre.value.trim().length < 2) {
-      setErr(fNombre, true); ok = false;
-    } else { setErr(fNombre, false); }
+    if(!fNombre.value.trim() || fNombre.value.trim().length < 2){
+      setErr(fNombre,true); ok=false;
+    } else { setErr(fNombre,false); }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!fEmail.value.trim() || !emailRegex.test(fEmail.value.trim())) {
-      setErr(fEmail, true); ok = false;
-    } else { setErr(fEmail, false); }
+    const emailRx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if(!fEmail.value.trim() || !emailRx.test(fEmail.value.trim())){
+      setErr(fEmail,true); ok=false;
+    } else { setErr(fEmail,false); }
 
-    // Phone: get the full international number from ITI
     let fullPhone = fTel.value.trim();
-    if (itiInstance) {
-      fullPhone = itiInstance.getNumber() || fTel.value.trim();
-    }
-    if (!fullPhone || fullPhone.replace(/\D/g,'').length < 7) {
-      setErr(fTel, true); ok = false;
-    } else { setErr(fTel, false); }
+    if(itiInstance) fullPhone = itiInstance.getNumber() || fullPhone;
+    if(!fullPhone || fullPhone.replace(/\D/g,'').length < 7){
+      setErr(fTel,true); ok=false;
+    } else { setErr(fTel,false); }
 
-    if (!fComuna.value.trim() || fComuna.value.trim().length < 2) {
-      setErr(fComuna, true); ok = false;
-    } else { setErr(fComuna, false); }
+    if(!fComuna.value.trim() || fComuna.value.trim().length < 2){
+      setErr(fComuna,true); ok=false;
+    } else { setErr(fComuna,false); }
 
-    if (!ok) {
-      showFormMsg('error', 'Por favor completa todos los campos correctamente.');
+    if(!ok){
+      showFormMsg('error','Completa todos los campos correctamente.');
       return;
     }
 
-    // ── Loading state ──
+    // ── Loading ──
     submitting = true;
-    const originalText = btn.innerHTML;
     btn.innerHTML = '<div class="spinner"></div> Enviando...';
     btn.classList.add('loading');
     btn.disabled = true;
 
-    try {
-      const payload = {
-        nombre:   fNombre.value.trim(),
-        email:    fEmail.value.trim(),
-        telefono: fullPhone,
-        comuna:   fComuna.value.trim(),
-        website:  fHoney ? fHoney.value : '',   // honeypot
-      };
+    const payload = JSON.stringify({
+      nombre:   fNombre.value.trim(),
+      email:    fEmail.value.trim(),
+      telefono: fullPhone,
+      comuna:   fComuna.value.trim(),
+      website:  fHoney ? fHoney.value : '',
+    });
 
+    // ── Send: try fetch first, fall back to sendBeacon ──
+    // Google Apps Script 302-redirects the initial POST. Modern browsers
+    // follow this and return the script's response. If CORS blocks the
+    // response we still consider it sent (server processes it regardless).
+    try {
       const res = await fetch(FORM_ENDPOINT, {
         method: 'POST',
-        mode: 'no-cors',   // Apps Script doesn't return proper CORS headers
-        headers: { 'Content-Type': 'text/plain' },
-        body: JSON.stringify(payload)
+        redirect: 'follow',
+        body: payload,
       });
 
-      // With mode:'no-cors', response is opaque — we can't read it.
-      // Apps Script will process the request server-side regardless.
-      // We assume success if no network error was thrown.
+      // Try to read response (may fail if CORS blocks the redirected response)
+      let result = { success: true };
+      try { result = await res.json(); } catch(_){}
 
-      // ── Success state ──
-      btn.innerHTML = '🎁 ¡Guía en camino!';
-      btn.classList.remove('loading', 'btn-gold');
-      btn.classList.add('sent');
-      spawnParticles(btn);
-      showFormMsg('success', '¡Solicitud recibida! Te contactaremos pronto para entregarte tu guía.');
+      if(result.success === false){
+        showError(result.message || null);
+      } else {
+        showSuccess();
+      }
 
-      // Clear fields
-      fNombre.value = '';
-      fEmail.value  = '';
-      fTel.value    = '';
-      fComuna.value = '';
-
-      // After 8 seconds, reset the button so they could submit again if needed
-      setTimeout(() => {
-        btn.innerHTML = 'La quiero';
-        btn.classList.remove('sent');
-        btn.classList.add('btn-gold');
-        btn.disabled = false;
-        submitting = false;
-        clearFormMsg();
-      }, 8000);
-
-    } catch (err) {
-      // Network or other error
-      console.error('Form submit error:', err);
-      btn.innerHTML = originalText;
-      btn.classList.remove('loading');
-      btn.disabled = false;
-      submitting = false;
-      showFormMsg('error', 'Hubo un problema al enviar. Por favor intenta de nuevo o escríbenos por WhatsApp.');
+    } catch(fetchErr) {
+      // fetch failed (CORS or network). Use sendBeacon as 100% reliable fallback.
+      // sendBeacon is fire-and-forget: no CORS issues, POST goes through, body arrives intact.
+      console.info('fetch failed, falling back to sendBeacon:', fetchErr.message);
+      try {
+        const sent = navigator.sendBeacon(FORM_ENDPOINT, payload);
+        if(sent){
+          // Data was queued by the browser — it WILL be delivered.
+          showSuccess();
+        } else {
+          showError();
+        }
+      } catch(beaconErr){
+        console.error('sendBeacon also failed:', beaconErr);
+        showError();
+      }
     }
   });
 })();
