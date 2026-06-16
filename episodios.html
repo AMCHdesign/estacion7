@@ -332,7 +332,9 @@ body.loaded .eh-meta{opacity:1;transform:none;filter:blur(0)}
 .ep-thumb{
   position:relative;
   width:340px;
-  aspect-ratio:16/9;
+  /* 3:2 para que coincida con la proporción de las miniaturas de YouTube
+     y no se recorte la imagen al usar object-fit:cover. */
+  aspect-ratio:3/2;
   border-radius:16px;overflow:hidden;
   background:linear-gradient(135deg,var(--teal) 0%,var(--navy) 100%);
   border:1px solid rgba(255,255,255,.06);
@@ -969,27 +971,71 @@ body.loaded .eh-meta{opacity:1;transform:none;filter:blur(0)}
   background:rgba(217,75,62,.1);border-color:var(--red);color:var(--red)
 }
 
-/* TOAST */
-.pl-toast{
-  position:fixed;bottom:32px;left:50%;
-  transform:translateX(-50%) translateY(20px);
-  background:rgba(13,44,58,.95);
-  border:1px solid rgba(201,162,39,.4);
-  border-radius:40px;
-  padding:11px 22px;
-  color:var(--light);
-  font-size:.88rem;font-weight:400;
-  opacity:0;pointer-events:none;
-  z-index:5000;
-  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
-  transition:opacity .3s,transform .3s;
-  box-shadow:0 18px 44px -10px rgba(0,0,0,.5);
-  display:flex;align-items:center;gap:9px
+/* MOCK PLAYER — imagen del episodio con play encima
+   No carga video real, es un demo visual hasta que tengamos
+   los videos publicados. Click en el play → pulse y nada más. */
+.pl-mock{
+  position:absolute;inset:0;
+  display:block;
+  background:#000;
 }
-.pl-toast.show{
-  opacity:1;transform:translateX(-50%) translateY(0)
+.pl-mock-img{
+  position:absolute;inset:0;
+  width:100%;height:100%;
+  object-fit:cover;
+  display:block;
 }
-.pl-toast svg{width:16px;height:16px;fill:var(--gold);flex-shrink:0}
+.pl-mock::after{
+  /* Sutil oscurecido para dar contraste al botón play */
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse at center,rgba(0,0,0,.05) 0%,rgba(0,0,0,.35) 100%);
+  pointer-events:none;
+}
+.pl-mock-play{
+  position:absolute;left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  width:92px;height:92px;border-radius:50%;
+  background:var(--gold);
+  border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 14px 40px -8px rgba(0,0,0,.55),0 0 0 8px rgba(201,162,39,.18);
+  transition:transform .25s cubic-bezier(.34,1.56,.64,1),box-shadow .25s;
+  z-index:2;
+}
+.pl-mock-play:hover{
+  transform:translate(-50%,-50%) scale(1.07);
+  box-shadow:0 18px 48px -8px rgba(0,0,0,.7),0 0 0 12px rgba(201,162,39,.22)
+}
+.pl-mock-play:active{transform:translate(-50%,-50%) scale(.94)}
+.pl-mock-play svg{
+  width:32px;height:32px;fill:var(--navy);
+  margin-left:4px /* offset óptico del triángulo */
+}
+.pl-mock-play.is-pulse{animation:plMockPulse .55s cubic-bezier(.34,1.56,.64,1)}
+@keyframes plMockPulse{
+  0%   {transform:translate(-50%,-50%) scale(1)}
+  35%  {transform:translate(-50%,-50%) scale(.86)}
+  70%  {transform:translate(-50%,-50%) scale(1.1)}
+  100% {transform:translate(-50%,-50%) scale(1)}
+}
+@media(max-width:600px){
+  .pl-mock-play{width:74px;height:74px;box-shadow:0 12px 32px -8px rgba(0,0,0,.55),0 0 0 6px rgba(201,162,39,.18)}
+  .pl-mock-play svg{width:26px;height:26px}
+}
+
+/* Estado de éxito para botones .pl-action (feedback inline tipo "Enlace copiado") */
+.pl-action.is-success{
+  background:rgba(94,196,200,.14);
+  border-color:var(--aqua);
+  color:var(--aqua);
+  pointer-events:none /* evita doble click durante el feedback */
+}
+.pl-action.is-success svg{
+  fill:var(--aqua);stroke:var(--aqua)
+}
+/* Cursor para Comentar (anchor sin href) */
+#plComment{cursor:pointer}
 
 /* Bloqueo de scroll cuando el modal está abierto */
 body.pl-locked{overflow:hidden}
@@ -1002,7 +1048,6 @@ body.pl-locked{overflow:hidden}
   .pl-eyebrow{font-size:.6rem;letter-spacing:.28em}
   .pl-close{width:38px;height:38px}
   .pl-desc{padding:18px 20px}
-  .pl-toast{bottom:20px;font-size:.82rem;padding:10px 18px}
   .pl-action{padding:12px 14px;font-size:.8rem;min-width:140px}
   .pl-placeholder-num{font-size:4.5rem}
   .pl-placeholder-msg{font-size:.92rem}
@@ -1307,11 +1352,11 @@ body.pl-locked{overflow:hidden}
 
     <!-- Acciones: YouTube · Comentar · Solicita tu guía · Compartir -->
     <div class="pl-actions">
-      <a class="pl-action pl-action-yt" id="plYt" href="#" target="_blank" rel="noopener noreferrer">
+      <a class="pl-action pl-action-yt" id="plYt" href="https://youtube.com/@estacion7.cl" target="_blank" rel="noopener noreferrer">
         <svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31.4 31.4 0 0 0 0 12a31.4 31.4 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1C4.5 20.5 12 20.5 12 20.5s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31.4 31.4 0 0 0 24 12a31.4 31.4 0 0 0-.5-5.8zM9.6 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg>
         <span>Ver en YouTube</span>
       </a>
-      <a class="pl-action" id="plComment" href="#" target="_blank" rel="noopener noreferrer">
+      <a class="pl-action" id="plComment" role="button" tabindex="0">
         <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         <span>Comentar</span>
       </a>
@@ -1326,12 +1371,6 @@ body.pl-locked{overflow:hidden}
     </div>
 
   </div><!-- /.pl-shell -->
-</div>
-
-<!-- Toast (notificaciones tipo "enlace copiado") -->
-<div class="pl-toast" id="plToast" role="status" aria-live="polite">
-  <svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"  fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-  <span id="plToastText">Enlace copiado</span>
 </div>
 
 <!-- Back to top -->
@@ -1353,25 +1392,25 @@ const EPISODES = [
     title:'¿Se puede confiar?',
     desc:'Miramos las noticias, las redes, y ya no confiamos ni en el vecino. ¿Tiene sentido entonces abrirle la puerta a un libro de hace dos mil años? La respuesta te va a obligar a repensar todo lo que creías saber.',
     available:true,
-    /* URLs específicas del episodio.
-       Soporta watch?v=, youtu.be/, embed/ o shorts/ — el video ID se
-       extrae automáticamente para el iframe y la miniatura. */
-    youtube:'https://www.youtube.com/watch?v=cHo0RqadL9c',
+    /* youtube/spotify: cuando exista el video/audio real del episodio,
+       reemplazá estos valores con la URL específica. Mientras tanto el
+       botón YouTube de la card y del modal lleva al canal general. */
+    youtube:'',
     spotify:'https://open.spotify.com/show/estacion7',
     leccion:'',                                    // ruta del PDF cuando exista, ej: 'assets/episodios/lecciones/ep-01.pdf'
-    /* Miniatura: si en el futuro tienes una imagen real,
-       define `thumb:'assets/episodios/thumbs/ep-01.jpg'` aquí. */
-    thumb:'',
+    /* Miniatura local (16:9 recomendado). Se usa tanto en la card del
+       listado como en el placeholder del modal mock. */
+    thumb:'assets/img/miniatura01.jpg',
   },
-  { num:'02', title:'¿Se puede empezar de cero?',   desc:'Todos cargamos errores que quisiéramos borrar. Pero, ¿existe realmente el Control+Z en la vida real, o es solo una frase bonita?', available:true,  youtube:'https://www.youtube.com/watch?v=cUdtTLyDSMg', spotify:'https://open.spotify.com/show/estacion7', leccion:'', thumb:'' },
-  { num:'03', title:'El reencuentro más esperado',  desc:'¿Y si alguien que se fue prometió volver a buscarte? Descubre por qué esta promesa podría ser la cita más importante de toda la historia.', available:false, youtube:'', spotify:'', leccion:'', thumb:'' },
-  { num:'04', title:'El placer de parar',           desc:'Vivimos sintiéndonos culpables por descansar. ¿Qué pasa si el descanso no es flojera, sino exactamente lo que tu mente y tu cuerpo necesitan?', available:false, youtube:'', spotify:'', leccion:'', thumb:'' },
-  { num:'05', title:'El misterio del último sueño', desc:'La muerte es el tema que todos evitan. Hoy lo ponemos sobre la mesa y lo que vas a escuchar puede quitarte el miedo para siempre.', available:false, youtube:'', spotify:'', leccion:'', thumb:'' },
-  { num:'06', title:'¿Todavía necesitamos estar juntos?', desc:'Hoy hacemos todo solos: entrenamos, compramos, hasta buscamos espiritualidad en un video. Entonces, ¿para qué sirve la comunidad?', available:false, youtube:'', spotify:'', leccion:'', thumb:'' },
-  { num:'07', title:'¿Quién es el dueño del negocio?', desc:'La plata se va sola y el estrés financiero no da tregua. ¿Podría haber una forma completamente distinta de ver tu relación con el dinero?', available:false, youtube:'', spotify:'', leccion:'', thumb:'' },
-  { num:'08', title:'El siguiente paso',            desc:'Llevamos siete episodios hablando, pero saber cosas no cambia nada si no te mueves. ¿Qué es lo que realmente te está frenando?', available:false, youtube:'', spotify:'', leccion:'', thumb:'' },
-  { num:'09', title:'El mapa del perdón',           desc:'A veces sentimos que lo que hicimos no tiene vuelta atrás, que Dios está demasiado lejos. Hoy descubrimos que existe un camino real y concreto para acercarse a Él.', available:false, youtube:'', spotify:'', leccion:'', thumb:'' },
-  { num:'10', title:'Vivir con esperanza',          desc:'Diez estaciones, diez conversaciones que fueron cambiando algo por dentro. Ahora solo queda una pregunta: ¿estás dispuesto a dar el paso que lo cambia todo?', available:false, youtube:'', spotify:'', leccion:'', thumb:'' },
+  { num:'02', title:'¿Se puede empezar de cero?',   desc:'Todos cargamos errores que quisiéramos borrar. Pero, ¿existe realmente el Control+Z en la vida real, o es solo una frase bonita?', available:true,  youtube:'', spotify:'https://open.spotify.com/show/estacion7', leccion:'', thumb:'assets/img/miniatura02.jpg' },
+  { num:'03', title:'El reencuentro más esperado',  desc:'¿Y si alguien que se fue prometió volver a buscarte? Descubre por qué esta promesa podría ser la cita más importante de toda la historia.', available:false, youtube:'', spotify:'', leccion:'', thumb:'assets/img/miniatura03.jpg' },
+  { num:'04', title:'El placer de parar',           desc:'Vivimos sintiéndonos culpables por descansar. ¿Qué pasa si el descanso no es flojera, sino exactamente lo que tu mente y tu cuerpo necesitan?', available:false, youtube:'', spotify:'', leccion:'', thumb:'assets/img/miniatura04.jpg' },
+  { num:'05', title:'El misterio del último sueño', desc:'La muerte es el tema que todos evitan. Hoy lo ponemos sobre la mesa y lo que vas a escuchar puede quitarte el miedo para siempre.', available:false, youtube:'', spotify:'', leccion:'', thumb:'assets/img/miniatura05.jpg' },
+  { num:'06', title:'¿Todavía necesitamos estar juntos?', desc:'Hoy hacemos todo solos: entrenamos, compramos, hasta buscamos espiritualidad en un video. Entonces, ¿para qué sirve la comunidad?', available:false, youtube:'', spotify:'', leccion:'', thumb:'assets/img/miniatura06.jpg' },
+  { num:'07', title:'¿Quién es el dueño del negocio?', desc:'La plata se va sola y el estrés financiero no da tregua. ¿Podría haber una forma completamente distinta de ver tu relación con el dinero?', available:false, youtube:'', spotify:'', leccion:'', thumb:'assets/img/miniatura07.jpg' },
+  { num:'08', title:'El siguiente paso',            desc:'Llevamos siete episodios hablando, pero saber cosas no cambia nada si no te mueves. ¿Qué es lo que realmente te está frenando?', available:false, youtube:'', spotify:'', leccion:'', thumb:'assets/img/miniatura08.jpg' },
+  { num:'09', title:'El mapa del perdón',           desc:'A veces sentimos que lo que hicimos no tiene vuelta atrás, que Dios está demasiado lejos. Hoy descubrimos que existe un camino real y concreto para acercarse a Él.', available:false, youtube:'', spotify:'', leccion:'', thumb:'assets/img/miniatura09.jpg' },
+  { num:'10', title:'Vivir con esperanza',          desc:'Diez estaciones, diez conversaciones que fueron cambiando algo por dentro. Ahora solo queda una pregunta: ¿estás dispuesto a dar el paso que lo cambia todo?', available:false, youtube:'', spotify:'', leccion:'', thumb:'assets/img/miniatura10.jpg' },
 ];
 
 /* Ciclo de color de firma por episodio */
@@ -1412,17 +1451,10 @@ const THUMB_ART = `
     const status = ep.available ? 'available' : 'locked';
     const statusLabel = ep.available ? 'Disponible ahora' : 'Próximamente';
 
-    /* Thumbnail: prioriza foto custom (ep.thumb). Si no hay, deriva la
-       miniatura desde la URL de YouTube (hqdefault.jpg, 480x360, siempre
-       disponible). Si ep.youtube apunta al canal (sin video ID), no hay
-       match y queda solo el placeholder visual con el número gigante. */
-    let thumbSrc = ep.thumb;
-    if (!thumbSrc && ep.youtube){
-      const ytMatch = ep.youtube.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/shorts\/)([a-zA-Z0-9_-]{11})/);
-      if (ytMatch) thumbSrc = `https://i.ytimg.com/vi/${ytMatch[1]}/hqdefault.jpg`;
-    }
-    const thumbImg = thumbSrc
-      ? `<img class="ep-thumb-img has-img" src="${thumbSrc}" alt="Miniatura episodio ${ep.num}" loading="lazy" onerror="this.style.display='none'">`
+    /* Thumbnail: imagen local definida en ep.thumb (assets/img/...).
+       Si está vacío, queda solo el placeholder visual con el número gigante. */
+    const thumbImg = ep.thumb
+      ? `<img class="ep-thumb-img has-img" src="${ep.thumb}" alt="Miniatura episodio ${ep.num}" loading="lazy">`
       : '';
     const thumbCenter = ep.available
       ? `<button type="button" class="ep-thumb-play" data-play-ep="${ep.num}" aria-label="Reproducir episodio ${ep.num}">${ICONS.play}</button>`
@@ -1433,9 +1465,10 @@ const THUMB_ART = `
       ? `<button type="button" class="ep-btn ep-btn-play" data-play-ep="${ep.num}" aria-label="Ver episodio ${ep.num}">${ICONS.play}<span class="ep-btn-text">Ver ahora</span></button>`
       : `<span class="ep-btn-wrap" data-tip="Disponible próximamente"><span class="ep-btn ep-btn-play is-disabled">${ICONS.play}<span class="ep-btn-text">Próximamente</span></span></span>`;
 
-    /* YouTube */
-    const ytBtn = (ep.available && ep.youtube)
-      ? `<a href="${ep.youtube}" target="_blank" rel="noopener noreferrer" class="ep-btn ep-btn-yt">${ICONS.yt}<span class="ep-btn-text">YouTube</span></a>`
+    /* YouTube — siempre lleva al canal cuando el episodio está disponible.
+       Cuando exista el video real del episodio podemos volver a usar ep.youtube. */
+    const ytBtn = ep.available
+      ? `<a href="https://youtube.com/@estacion7.cl" target="_blank" rel="noopener noreferrer" class="ep-btn ep-btn-yt">${ICONS.yt}<span class="ep-btn-text">YouTube</span></a>`
       : `<span class="ep-btn-wrap" data-tip="Disponible próximamente"><span class="ep-btn ep-btn-yt is-disabled">${ICONS.yt}<span class="ep-btn-text">YouTube</span></span></span>`;
 
     /* Spotify */
@@ -1777,34 +1810,34 @@ mobMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu
    * Devuelve '' si la URL es un canal o no se reconoce
    * (en cuyo caso se muestra el placeholder).
    */
-  function extractYouTubeId(url){
-    if (!url) return '';
-    const m = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/shorts\/)([a-zA-Z0-9_-]{11})/);
-    return m ? m[1] : '';
-  }
-
   /**
-   * Inyecta el iframe de YouTube en el stage.
-   * Si no hay video ID válido, muestra el placeholder.
+   * Inyecta en el stage la miniatura del episodio con un botón play encima.
+   * NO carga ningún video real — es un mock visual hasta que tengamos los
+   * episodios publicados. El click sobre el play hace un pulse (CSS) y nada
+   * más; cuando llegue el momento real, acá se reemplaza por la inyección
+   * del iframe de YouTube otra vez.
    */
   function loadVideo(ep){
-    const videoId = extractYouTubeId(ep.youtube);
-    if (videoId) {
-      // Embed estándar de YouTube. Parámetros:
-      //   rel=0           → no mostrar videos relacionados de otros canales al final
-      //   modestbranding=1→ logo YouTube más discreto
-      //   playsinline=1   → en iOS, evita que arranque en pantalla completa forzada
-      //   color=white     → barra de progreso blanca (en vez de roja YouTube)
-      const src = `https://www.youtube-nocookie.com/embed/${videoId}?rel=0&modestbranding=1&playsinline=1&color=white`;
+    if (ep.thumb) {
       stage.innerHTML = `
-        <iframe
-          src="${src}"
-          title="Episodio ${ep.num}: ${escapeAttr(ep.title)}"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowfullscreen
-          referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
+        <div class="pl-mock">
+          <img class="pl-mock-img" src="${ep.thumb}" alt="Miniatura episodio ${ep.num}: ${escapeAttr(ep.title)}">
+          <button type="button" class="pl-mock-play" aria-label="Reproducir episodio ${ep.num}">
+            <svg viewBox="0 0 16 16"><path d="M3 2l10 6-10 6V2z"/></svg>
+          </button>
+        </div>`;
+      // Pulse al hacer click (sin ir a ningún lado)
+      const playBtn = stage.querySelector('.pl-mock-play');
+      if (playBtn) {
+        playBtn.addEventListener('click', () => {
+          playBtn.classList.remove('is-pulse');
+          // forzar reflow para reiniciar la animación si se clickea rápido
+          void playBtn.offsetWidth;
+          playBtn.classList.add('is-pulse');
+        });
+      }
     } else {
-      // Placeholder: video aún no subido a YouTube (o ep.youtube apunta al canal)
+      // Sin miniatura → placeholder textual (episodios futuros)
       stage.innerHTML = `
         <div class="pl-placeholder">
           <div class="pl-placeholder-num">${ep.num}</div>
@@ -1815,8 +1848,7 @@ mobMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu
   }
 
   function unloadVideo(){
-    // Crítico: vaciar el stage para que YouTube DETENGA el audio.
-    // (Si solo cerramos el modal el iframe sigue reproduciendo en background.)
+    // Vaciar el stage al cerrar / cambiar de episodio.
     stage.innerHTML = '';
   }
 
@@ -1826,30 +1858,33 @@ mobMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu
 
   // ── Acciones ─────────────────────────
   function updateActionLinks(ep){
-    // "Ver en YouTube" → abre el video (o canal si no hay video)
+    // "Ver en YouTube" → canal general (no tenemos videos por episodio aún)
     if (ytLink) {
-      ytLink.href = ep.youtube || 'https://youtube.com/@estacion7.cl';
+      ytLink.href = 'https://youtube.com/@estacion7.cl';
     }
-    // "Comentar" → mismo destino que YouTube; los comentarios están bajo el video
+    // "Comentar" → mock: no lleva a ningún lado. El click se intercepta
+    // abajo con preventDefault y solo da feedback visual.
     if (commentLink) {
-      const videoId = extractYouTubeId(ep.youtube);
-      // Si hay video, deep-link a la sección de comentarios (#comments). Si no, canal.
-      commentLink.href = videoId
-        ? `https://www.youtube.com/watch?v=${videoId}#comments`
-        : (ep.youtube || 'https://youtube.com/@estacion7.cl');
+      commentLink.removeAttribute('href');
     }
   }
 
-  // ── Toast ────────────────────────────
-  const toast = document.getElementById('plToast');
-  const toastText = document.getElementById('plToastText');
-  let toastTimer = null;
-  function showToast(text){
-    if (!toast) return;
-    toastText.textContent = text;
-    toast.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => toast.classList.remove('show'), 2400);
+  // ── Feedback inline en botones (reemplaza el toast global) ────
+  // Muta temporalmente el texto y el ícono del botón pasado, y restaura
+  // después de `ms`. Útil para "Enlace copiado" en Compartir y para
+  // futuros estados de éxito/error en otros pl-action.
+  function flashButton(btn, text, ms = 1800){
+    if (!btn || btn.classList.contains('is-success')) return;
+    const span = btn.querySelector('span');
+    if (!span) return;
+    const originalText = span.textContent;
+    span.textContent = text;
+    btn.classList.add('is-success');
+    setTimeout(() => {
+      btn.classList.remove('is-success');
+      const s = btn.querySelector('span');
+      if (s) s.textContent = originalText;
+    }, ms);
   }
 
   // ── Apertura / cierre del modal ──────
@@ -1933,27 +1968,33 @@ mobMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu
   prevBtn.addEventListener('click', () => goEpisode(-1));
   nextBtn.addEventListener('click', () => goEpisode(+1));
 
-  // Compartir → copiar enlace
+  // Compartir → copiar enlace, feedback dentro del propio botón
   if (shareBtn) {
     shareBtn.addEventListener('click', () => {
       const url = location.origin + location.pathname + '#ep=' + EPISODES[currentIdx].num;
+      const ok   = () => flashButton(shareBtn, 'Enlace copiado');
+      const fail = () => flashButton(shareBtn, 'No se pudo copiar');
       if (navigator.clipboard && navigator.clipboard.writeText){
-        navigator.clipboard.writeText(url).then(
-          () => showToast('Enlace copiado'),
-          () => fallbackCopy(url)
-        );
+        navigator.clipboard.writeText(url).then(ok, () => fallbackCopy(url, ok, fail));
       } else {
-        fallbackCopy(url);
+        fallbackCopy(url, ok, fail);
       }
     });
   }
-  function fallbackCopy(text){
+  function fallbackCopy(text, onOk, onFail){
     const ta = document.createElement('textarea');
     ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
     document.body.appendChild(ta); ta.select();
-    try { document.execCommand('copy'); showToast('Enlace copiado'); }
-    catch(e) { showToast('No se pudo copiar'); }
+    try { document.execCommand('copy'); onOk && onOk(); }
+    catch(e) { onFail && onFail(); }
     document.body.removeChild(ta);
+  }
+
+  // "Comentar" — botón mock, no lleva a ningún lado
+  if (commentLink) {
+    commentLink.addEventListener('click', (e) => {
+      e.preventDefault();
+    });
   }
 
   // Triggers de apertura (delegación: cualquier elemento con data-play-ep)

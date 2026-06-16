@@ -1184,17 +1184,15 @@ body.loaded .nh-vid{opacity:1;transform:none;filter:blur(0)}
        en el stacking context de la raíz (.nh-inner crea su propio
        context a z:2 que atraparía al video). Así el video queda por
        encima del spotlight (z:5) y del canvas de partículas (z:1). -->
-  <div class="nh-vid" id="nhVid" role="button" tabindex="0" aria-label="Reproducir video de presentación">
-    <img class="nh-vid-thumb"
-         src="https://img.youtube.com/vi/cHo0RqadL9c/maxresdefault.jpg"
-         alt=""
-         aria-hidden="true"
-         loading="lazy"
-         onerror="this.src='https://img.youtube.com/vi/cHo0RqadL9c/hqdefault.jpg'">
-
-    <button class="nh-play" aria-label="Reproducir">
-      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M5 3l14 9-14 9V3z"/></svg>
-    </button>
+  <div class="nh-vid" id="nhVid" aria-label="Video próximamente" style="cursor:default">
+    <!-- Placeholder "Próximamente" — sin enlace a video externo -->
+    <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:4;text-align:center;gap:16px;padding:24px">
+      <div style="width:82px;height:82px;border-radius:50%;border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;background:rgba(7,24,32,.5);backdrop-filter:blur(8px)">
+        <svg viewBox="0 0 24 24" style="width:32px;height:32px;fill:var(--gold);margin-left:3px"><path d="M5 3l14 9-14 9V3z"/></svg>
+      </div>
+      <span style="font-weight:800;font-size:clamp(1.4rem,3vw,2rem);letter-spacing:-.01em;color:var(--light)">Video próximamente</span>
+      <span style="font-weight:300;font-size:clamp(.8rem,1.2vw,.92rem);color:var(--muted);letter-spacing:.08em">ESTACIÓN 7 · DETRÁS DEL PODCAST</span>
+    </div>
   </div>
 </section>
 
@@ -1800,9 +1798,8 @@ mobMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu
   const vid = document.getElementById('nhVid');
   if (!vid) return;
 
-  const EMBED_URL =
-    'https://www.youtube.com/embed/cHo0RqadL9c' +
-    '?autoplay=1&rel=0&modestbranding=1&playsinline=1';
+  // ── VIDEO DESACTIVADO: sin URL hasta tener el video oficial ──
+  const EMBED_URL = '';
 
   function onKey(e){
     if (e.key === 'Enter' || e.key === ' '){
@@ -1812,6 +1809,7 @@ mobMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu
   }
 
   function playVideo(){
+    if (!EMBED_URL) return;          // ← No hay video aún, no hacer nada
     const iframe = document.createElement('iframe');
     iframe.src = EMBED_URL;
     iframe.title = 'Estación 7 — Video presentación';

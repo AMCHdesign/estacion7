@@ -2100,16 +2100,16 @@ const GUIDES = [
    - `available: false` → card shown as "Próximamente" with lock icon, not clickable
    Edit the `available` flag as each episode goes live. */
 const EPISODES = [
-  { num:'01', title:'¿Se puede confiar?',           desc:'Miramos las noticias, las redes, y ya no confiamos ni en el vecino. ¿Tiene sentido entonces abrirle la puerta a un libro de hace dos mil años?', available:true,  youtubeId:'cHo0RqadL9c' },
-  { num:'02', title:'¿Se puede empezar de cero?',   desc:'Todos cargamos errores que quisiéramos borrar. Pero, ¿existe realmente el Control+Z en la vida real, o es solo una frase bonita?', available:true,  youtubeId:'cUdtTLyDSMg' },
-  { num:'03', title:'El reencuentro más esperado',  desc:'¿Y si alguien que se fue prometió volver a buscarte? Descubre por qué esta promesa podría ser la cita más importante de toda la historia.', available:false },
-  { num:'04', title:'El placer de parar',           desc:'Vivimos sintiéndonos culpables por descansar. ¿Qué pasa si el descanso no es flojera, sino exactamente lo que tu mente y tu cuerpo necesitan?', available:false },
-  { num:'05', title:'El misterio del último sueño', desc:'La muerte es el tema que todos evitan. Hoy lo ponemos sobre la mesa y lo que vas a escuchar puede quitarte el miedo para siempre.', available:false },
-  { num:'06', title:'¿Todavía necesitamos estar juntos?', desc:'Hoy hacemos todo solos: entrenamos, compramos, hasta buscamos espiritualidad en un video. Entonces, ¿para qué sirve la comunidad?', available:false },
-  { num:'07', title:'¿Quién es el dueño del negocio?', desc:'La plata se va sola y el estrés financiero no da tregua. ¿Podría haber una forma completamente distinta de ver tu relación con el dinero?', available:false },
-  { num:'08', title:'El siguiente paso',            desc:'Llevamos siete episodios hablando, pero saber cosas no cambia nada si no te mueves. ¿Qué es lo que realmente te está frenando?', available:false },
-  { num:'09', title:'El mapa del perdón',           desc:'A veces sentimos que lo que hicimos no tiene vuelta atrás, que Dios está demasiado lejos. Hoy descubrimos que existe un camino real y concreto para acercarse a Él.', available:false },
-  { num:'10', title:'Vivir con esperanza',          desc:'Diez estaciones, diez conversaciones que fueron cambiando algo por dentro. Ahora solo queda una pregunta: ¿estás dispuesto a dar el paso que lo cambia todo?', available:false },
+  { num:'01', title:'¿Se puede confiar?',           desc:'Miramos las noticias, las redes, y ya no confiamos ni en el vecino. ¿Tiene sentido entonces abrirle la puerta a un libro de hace dos mil años?', available:true,  thumb:'assets/img/miniatura01.jpg' },
+  { num:'02', title:'¿Se puede empezar de cero?',   desc:'Todos cargamos errores que quisiéramos borrar. Pero, ¿existe realmente el Control+Z en la vida real, o es solo una frase bonita?', available:true,  thumb:'assets/img/miniatura02.jpg' },
+  { num:'03', title:'El reencuentro más esperado',  desc:'¿Y si alguien que se fue prometió volver a buscarte? Descubre por qué esta promesa podría ser la cita más importante de toda la historia.', available:false, thumb:'assets/img/miniatura03.jpg' },
+  { num:'04', title:'El placer de parar',           desc:'Vivimos sintiéndonos culpables por descansar. ¿Qué pasa si el descanso no es flojera, sino exactamente lo que tu mente y tu cuerpo necesitan?', available:false, thumb:'assets/img/miniatura04.jpg' },
+  { num:'05', title:'El misterio del último sueño', desc:'La muerte es el tema que todos evitan. Hoy lo ponemos sobre la mesa y lo que vas a escuchar puede quitarte el miedo para siempre.', available:false, thumb:'assets/img/miniatura05.jpg' },
+  { num:'06', title:'¿Todavía necesitamos estar juntos?', desc:'Hoy hacemos todo solos: entrenamos, compramos, hasta buscamos espiritualidad en un video. Entonces, ¿para qué sirve la comunidad?', available:false, thumb:'assets/img/miniatura06.jpg' },
+  { num:'07', title:'¿Quién es el dueño del negocio?', desc:'La plata se va sola y el estrés financiero no da tregua. ¿Podría haber una forma completamente distinta de ver tu relación con el dinero?', available:false, thumb:'assets/img/miniatura07.jpg' },
+  { num:'08', title:'El siguiente paso',            desc:'Llevamos siete episodios hablando, pero saber cosas no cambia nada si no te mueves. ¿Qué es lo que realmente te está frenando?', available:false, thumb:'assets/img/miniatura08.jpg' },
+  { num:'09', title:'El mapa del perdón',           desc:'A veces sentimos que lo que hicimos no tiene vuelta atrás, que Dios está demasiado lejos. Hoy descubrimos que existe un camino real y concreto para acercarse a Él.', available:false, thumb:'assets/img/miniatura09.jpg' },
+  { num:'10', title:'Vivir con esperanza',          desc:'Diez estaciones, diez conversaciones que fueron cambiando algo por dentro. Ahora solo queda una pregunta: ¿estás dispuesto a dar el paso que lo cambia todo?', available:false, thumb:'assets/img/miniatura10.jpg' },
 ];
 
 // ─── ADD / EDIT testimonials here ───────
@@ -2710,14 +2710,16 @@ function clearFormMsg(){
       ? `<div class="epi-lock-icon"><svg viewBox="0 0 24 24"><path d="M12 2a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2h-1V7a5 5 0 0 0-5-5zm-3 8V7a3 3 0 1 1 6 0v3H9z"/></svg></div>`
       : '';
 
-    /* Thumb content branches:
-       - If episode has a youtubeId → render the real video thumbnail (cover-cropped
-         to the card's thumb area) plus a soft scrim for legibility. We also overlay
-         a small play icon to make the affordance explicit.
-       - Otherwise → keep the original "subway sign" placeholder (large number + arch). */
-    const thumbContent = ep.youtubeId
+    /* Thumb content: ep.thumb (local) or ep.youtubeId (YouTube) or placeholder */
+    const hasImg = ep.thumb || ep.youtubeId;
+    const imgSrc = ep.thumb
+      ? ep.thumb
+      : ep.youtubeId
+        ? `https://img.youtube.com/vi/${ep.youtubeId}/mqdefault.jpg`
+        : '';
+    const thumbContent = hasImg
       ? `<img class="epi-thumb-img"
-              src="https://img.youtube.com/vi/${ep.youtubeId}/mqdefault.jpg"
+              src="${imgSrc}"
               alt="Miniatura del episodio ${ep.num}: ${ep.title}"
               loading="lazy" draggable="false">
          <div class="epi-thumb-scrim"></div>
@@ -2734,7 +2736,7 @@ function clearFormMsg(){
          ${lockMark}`;
 
     return `
-      <div class="epi-thumb${ep.youtubeId ? ' has-img' : ''}">
+      <div class="epi-thumb${hasImg ? ' has-img' : ''}">
         ${thumbContent}
       </div>
       <div class="epi-body">
