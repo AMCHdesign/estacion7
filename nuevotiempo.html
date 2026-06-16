@@ -490,6 +490,127 @@ body.loaded .nav{
     transition-duration:.01ms!important;
   }
 }
+/* ═══════════════════════════════════════════
+   BUTTONS (necesarios para el carrusel de guías)
+═══════════════════════════════════════════ */
+.btn{
+  display:inline-flex;align-items:center;gap:9px;
+  font-family:var(--f);font-weight:600;font-size:.93rem;
+  padding:13px 30px;border-radius:40px;border:none;cursor:pointer;
+  text-decoration:none;
+  transition:transform .2s,box-shadow .2s,background .2s,color .2s
+}
+.btn-gold{background:var(--gold);color:var(--navy)}
+.btn-gold:hover{background:var(--gold-lt);transform:translateY(-2px);box-shadow:0 10px 36px rgba(201,162,39,.42)}
+
+/* ═══════════════════════════════════════════
+   GUIDES CAROUSEL (trasplantado del index)
+═══════════════════════════════════════════ */
+.guides-sec{
+  position:relative;
+  background:#e8eef0;
+  padding:100px 24px 80px;
+  overflow:hidden;
+  color:#0c1e26;
+}
+.guides-sec .gd-bg{
+  position:absolute;inset:0;z-index:0;
+  background-image:url('assets/img/fondo-lineas-blanco.jpg');
+  background-size:cover;background-position:center;
+  pointer-events:none;
+}
+.guides-sec .gd-bg::after{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 90% 80% at 50% 50%, transparent 0%, rgba(7,24,32,.08) 40%, rgba(7,24,32,.32) 75%, rgba(7,24,32,.58) 100%),
+    linear-gradient(180deg, rgba(255,255,255,.15) 0%, rgba(255,255,255,0) 40%, rgba(13,30,38,.2) 100%);
+}
+.guides-sec .sec-hd,
+.guides-sec .gcs,
+.guides-sec .guides-cta{position:relative;z-index:2}
+.guides-sec .slabel{
+  display:block;font-weight:300;font-size:.76rem;letter-spacing:.32em;
+  text-transform:uppercase;color:#0d6e7a;margin-bottom:20px;text-align:center;
+}
+.guides-sec .stitle{
+  font-weight:800;font-size:clamp(2rem,5.5vw,3.8rem);
+  line-height:1;letter-spacing:-.025em;
+  color:#071820;text-align:center;margin-bottom:10px;
+}
+.guides-sec .stitle .g{color:var(--gold)}
+.sec-hd{text-align:center;margin-bottom:28px}
+.gcs{position:relative;height:300px;display:flex;align-items:center;justify-content:center}
+.gc-track{
+  position:relative;width:100%;height:100%;
+  display:flex;align-items:center;justify-content:center;
+  cursor:grab;user-select:none;touch-action:pan-y;
+}
+.gc-track.dragging{cursor:grabbing}
+.gc-track.dragging .gci{transition:none;pointer-events:none}
+.gci{
+  position:absolute;width:210px;aspect-ratio:8.5/11;
+  border-radius:14px;border:1px solid rgba(13,30,38,.12);
+  cursor:pointer;overflow:hidden;
+  transition:all .5s cubic-bezier(.4,0,.2,1), box-shadow .3s ease, border-color .3s ease;
+  background:#0c2c3a;
+  box-shadow:0 18px 40px rgba(7,24,32,.22);
+  text-decoration:none;
+  display:block;
+}
+.gci-img{
+  position:absolute;inset:0;
+  background-size:cover;background-position:center;
+  transition:transform .6s cubic-bezier(.16,1,.3,1);
+}
+.gci-overlay{
+  position:absolute;inset:0;
+  background:
+    linear-gradient(180deg, rgba(7,24,32,0) 35%, rgba(7,24,32,.55) 70%, rgba(7,24,32,.92) 100%),
+    radial-gradient(ellipse 90% 70% at 50% 100%, rgba(7,24,32,.5) 0%, transparent 70%);
+  pointer-events:none;
+}
+.gci-ttl{
+  position:absolute;left:14px;right:14px;bottom:14px;z-index:2;
+  font-weight:700;font-size:.86rem;line-height:1.18;letter-spacing:-.005em;
+  color:#fff5ee;text-shadow:0 1px 4px rgba(0,0,0,.45);
+}
+.gci.active{
+  border-color:rgba(201,162,39,.65);
+  box-shadow:0 28px 72px rgba(7,24,32,.42),0 0 0 1px rgba(201,162,39,.28),0 0 60px rgba(201,162,39,.18);
+}
+.gci.active .gci-img{transform:scale(1.06)}
+.gci.active .gci-ttl{font-size:.95rem}
+.gc-arr{
+  position:absolute;top:50%;transform:translateY(-50%);
+  width:44px;height:44px;border-radius:50%;
+  background:rgba(7,24,32,.08);border:1px solid rgba(7,24,32,.16);
+  color:#0c1e26;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;z-index:20;transition:.2s;
+  backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
+}
+.gc-arr:hover{background:var(--gold);border-color:var(--gold);color:var(--navy)}
+.gc-arr.l{left:20px} .gc-arr.r{right:20px}
+.gc-arr svg{width:18px;height:18px;fill:currentColor}
+.guides-cta{text-align:center;margin-top:8px}
+@media(max-width:900px){
+  .guides-sec{padding:80px 16px 60px}
+  .gci{width:145px}.gci.active{width:165px}
+  .gc-arr.l{left:4px}.gc-arr.r{right:4px}
+  .gcs{height:280px}
+}
+@media(max-width:640px){
+  .guides-sec{padding:70px 12px 50px}
+  .gcs{height:240px}
+  .gci{width:130px}.gci.active{width:148px}
+  .gci-ttl{font-size:.7rem;left:9px;right:9px;bottom:9px}
+  .gci.active .gci-ttl{font-size:.78rem}
+  .gc-arr{width:36px;height:36px}
+  .gc-arr.l{left:0}.gc-arr.r{right:0}
+}
+@media(max-width:380px){
+  .gci{width:115px}.gci.active{width:130px}
+  .gcs{height:215px}
+}
 </style>
 </head>
 <body>
@@ -559,6 +680,29 @@ body.loaded .nav{
 </section>
 
 <!-- ╔═══════════════╗
+     ║ GUIDES CARUS. ║
+     ╚═══════════════╝ -->
+<section class="guides-sec">
+  <div class="gd-bg" aria-hidden="true"></div>
+  <div class="sec-hd">
+    <span class="slabel">Material de estudio</span>
+    <h2 class="stitle">Nuestras <span class="g">guías</span></h2>
+  </div>
+  <div class="gcs">
+    <button class="gc-arr l" onclick="moveGuides(-1)" aria-label="Anterior">
+      <svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg>
+    </button>
+    <div class="gc-track" id="gcTrack"></div>
+    <button class="gc-arr r" onclick="moveGuides(1)" aria-label="Siguiente">
+      <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
+    </button>
+  </div>
+  <div class="guides-cta">
+    <a href="#" class="btn btn-gold" id="guideCta" target="_blank" rel="noopener noreferrer">La quiero</a>
+  </div>
+</section>
+
+<!-- ╔═══════════════╗
      ║    MARQUEE    ║
      ╚═══════════════╝ -->
 <div class="marquee" aria-hidden="true">
@@ -585,7 +729,7 @@ body.loaded .nav{
         <a href="https://tiktok.com/@estacion7.cl" class="fsoc" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
           <svg viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
         </a>
-        <a href="https://youtube.com/@estacion7.cl" class="fsoc" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+        <a href="https://youtube.com/@estacion7cl" class="fsoc" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
           <svg viewBox="0 0 24 24"><path d="M23.495 6.205a3.007 3.007 0 00-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 00.527 6.205a31.247 31.247 0 00-.522 5.805 31.247 31.247 0 00.522 5.783 3.007 3.007 0 002.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 002.088-2.088 31.247 31.247 0 00.5-5.783 31.247 31.247 0 00-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>
         </a>
         <a href="https://open.spotify.com/show/estacion7" class="fsoc" target="_blank" rel="noopener noreferrer" aria-label="Spotify">
@@ -771,6 +915,162 @@ body.loaded .nav{
       d.style.background = PALETTE[palIdx];
     });
   }, 2400);
+})();
+
+/* ═══════════════════════════════════════════
+   GUIDES DATA + CAROUSEL
+═══════════════════════════════════════════ */
+const GUIDES = [
+  { title:'Dios me oye',                          slug:'dios-me-oye' },
+  { title:'El sentido de la fe',                  slug:'el-sentido-de-la-fe' },
+  { title:'En busca de la verdad',                slug:'en-busca-de-la-verdad' },
+  { title:'Entre familia',                        slug:'entre-familia' },
+  { title:'Jesús restaurador de la vida',         slug:'jesus-restaurador-de-la-vida' },
+  { title:'Mente feliz',                          slug:'mente-feliz' },
+  { title:'Padres preparados, hijos de carácter', slug:'padres-preparados-hijos-de-caracter' },
+  { title:'Sentimientos, la ciencia del existir', slug:'sentimientos-la-ciencia-del-existir' },
+  { title:'Sin tabú',                             slug:'sin-tabu' },
+  { title:'Verdades para el tiempo del fin',      slug:'verdades-para-el-tiempo-del-fin' },
+  { title:'Yo creo',                              slug:'yo-creo' },
+  { title:'Yo en el universo',                    slug:'yo-en-el-universo' },
+].map(g => ({
+  ...g,
+  img: `assets/guias/${g.slug}.jpg`,
+  url: `https://www.nuevotiempo.cl/producto/${g.slug}/`,
+}));
+
+(function(){
+  const N      = GUIDES.length;
+  const track  = document.getElementById('gcTrack');
+  const ctaBtn = document.getElementById('guideCta');
+  if (!track) return;
+
+  const PX_PER_UNIT = 190;
+  let idx        = 0;
+  let displayIdx = 0;
+  let timer;
+  let dragMoved  = false;
+
+  function build(){
+    GUIDES.forEach((g, i) => {
+      const el = document.createElement('a');
+      el.className = 'gci';
+      el.href = g.url;
+      el.target = '_blank';
+      el.rel = 'noopener noreferrer';
+      el.draggable = false;
+      el.setAttribute('aria-label', `Guía: ${g.title} — abrir en Nuevo Tiempo`);
+      el.innerHTML = `
+        <div class="gci-img" style="background-image:url('${g.img}')" draggable="false"></div>
+        <div class="gci-overlay"></div>
+        <span class="gci-ttl">${g.title}</span>`;
+      el.addEventListener('click', (ev) => {
+        if (dragMoved) { ev.preventDefault(); ev.stopPropagation(); return; }
+        if (!el.classList.contains('active')) {
+          ev.preventDefault();
+          idx = i;
+          displayIdx = idx;
+          render();
+        }
+      });
+      track.appendChild(el);
+    });
+    render();
+  }
+
+  function render(){
+    const cards = track.querySelectorAll('.gci');
+    cards.forEach((c, i) => {
+      let off = i - displayIdx;
+      while (off >  N/2) off -= N;
+      while (off < -N/2) off += N;
+      const abs = Math.abs(off);
+      const scale   = Math.max(.52, 1 - abs * .16);
+      const tx      = off * PX_PER_UNIT;
+      const tz      = -abs * 70;
+      const ry      = off * 10;
+      const opacity = Math.max(.28, 1 - abs * .22);
+      c.style.transform = `translateX(${tx}px) translateZ(${tz}px) rotateY(${ry}deg) scale(${scale})`;
+      c.style.opacity   = opacity;
+      c.style.zIndex    = 20 - Math.round(abs);
+      c.classList.toggle('active', abs < 0.5);
+    });
+    if (ctaBtn) {
+      const active = GUIDES[idx];
+      ctaBtn.href = active.url;
+      ctaBtn.setAttribute('aria-label', `La quiero — ${active.title}`);
+    }
+  }
+
+  window.moveGuides = dir => {
+    idx = ((idx + dir) % N + N) % N;
+    displayIdx = idx;
+    render();
+  };
+
+  function startTimer(){ clearInterval(timer); timer = setInterval(() => moveGuides(1), 5500); }
+  function stopTimer(){ clearInterval(timer); }
+
+  // ─── DRAG / SWIPE ───────────────────────
+  let dragging = false;
+  let startX = 0;
+  let startDisplayIdx = 0;
+
+  function beginDrag(x){
+    dragging = true;
+    dragMoved = false;
+    startX = x;
+    startDisplayIdx = displayIdx;
+    track.classList.add('dragging');
+    stopTimer();
+  }
+  function moveDrag(x){
+    if (!dragging) return;
+    const dx = x - startX;
+    if (Math.abs(dx) > 5) dragMoved = true;
+    displayIdx = startDisplayIdx - dx / PX_PER_UNIT;
+    render();
+  }
+  function endDrag(){
+    if (!dragging) return;
+    dragging = false;
+    track.classList.remove('dragging');
+    // Snap to nearest
+    idx = ((Math.round(displayIdx) % N) + N) % N;
+    displayIdx = idx;
+    render();
+    setTimeout(() => { dragMoved = false; }, 50);
+    startTimer();
+  }
+
+  // Touch (mobile)
+  track.addEventListener('touchstart', e => { if (e.touches.length === 1) beginDrag(e.touches[0].clientX); }, { passive: true });
+  track.addEventListener('touchmove',  e => {
+    if (!dragging || e.touches.length !== 1) return;
+    const t = e.touches[0];
+    const dx = Math.abs(t.clientX - startX);
+    // Only intercept if horizontal motion dominates (preserve vertical scroll)
+    if (dx > 6 && e.cancelable) e.preventDefault();
+    moveDrag(t.clientX);
+  }, { passive: false });
+  track.addEventListener('touchend',    endDrag,  { passive: true });
+  track.addEventListener('touchcancel', endDrag,  { passive: true });
+
+  // Mouse (desktop)
+  track.addEventListener('mousedown', e => { if (e.button === 0) { e.preventDefault(); beginDrag(e.clientX); } });
+  window.addEventListener('mousemove', e => moveDrag(e.clientX));
+  window.addEventListener('mouseup',   endDrag);
+
+  build();
+  startTimer();
+
+  // Pause auto-rotate on hover
+  track.addEventListener('mouseenter', stopTimer);
+  track.addEventListener('mouseleave', () => { if (!dragging) startTimer(); });
+  if (ctaBtn) {
+    ctaBtn.addEventListener('mouseenter', stopTimer);
+    ctaBtn.addEventListener('mouseleave', startTimer);
+  }
 })();
 </script>
 </body>

@@ -576,98 +576,6 @@ body.loaded .s-art{opacity:.055}
 .wa-bar{position:absolute;bottom:0;left:0;right:0;height:7px;background:var(--wa);z-index:2}
 
 /* ═══════════════════════════════════════════
-   GUIDES CAROUSEL
-═══════════════════════════════════════════ */
-.guides-sec{
-  position:relative;
-  background:#e8eef0;
-  padding:100px 24px 80px;
-  overflow:hidden;
-  /* When this section is in view, we'll switch tinting */
-  color:#0c1e26;
-}
-.guides-sec .gd-bg{
-  position:absolute;inset:0;z-index:0;
-  background-image:url('assets/img/fondo-lineas-blanco.jpg');
-  background-size:cover;background-position:center;
-  will-change:transform;
-  pointer-events:none;
-}
-.guides-sec .gd-bg::after{
-  /* Wash + visible dark vignette */
-  content:'';position:absolute;inset:0;
-  background:
-    radial-gradient(ellipse 90% 80% at 50% 50%, transparent 0%, rgba(7,24,32,.08) 40%, rgba(7,24,32,.32) 75%, rgba(7,24,32,.58) 100%),
-    linear-gradient(180deg, rgba(255,255,255,.15) 0%, rgba(255,255,255,0) 40%, rgba(13,30,38,.2) 100%);
-}
-.guides-sec .sec-hd,
-.guides-sec .gcs,
-.guides-sec .guides-cta{position:relative;z-index:2}
-/* Title color overrides for light bg */
-.guides-sec .slabel{color:#0d6e7a}
-.guides-sec .stitle{color:#071820}
-.guides-sec .stitle .g{color:var(--gold)}
-.sec-hd{text-align:center;margin-bottom:28px}
-.gcs{position:relative;height:300px;display:flex;align-items:center;justify-content:center}
-.gc-track{
-  position:relative;width:100%;height:100%;
-  display:flex;align-items:center;justify-content:center;
-  cursor:grab;user-select:none;touch-action:pan-y;
-}
-.gc-track.dragging{cursor:grabbing}
-.gc-track.dragging .gci{transition:none;pointer-events:none}
-.gci{
-  position:absolute;width:210px;aspect-ratio:8.5/11;
-  border-radius:14px;border:1px solid rgba(13,30,38,.12);
-  cursor:pointer;overflow:hidden;
-  transition:all .5s cubic-bezier(.4,0,.2,1), box-shadow .3s ease, border-color .3s ease;
-  background:#0c2c3a;
-  box-shadow:0 18px 40px rgba(7,24,32,.22);
-  text-decoration:none;
-  display:block;
-}
-.gci-img{
-  position:absolute;inset:0;
-  background-size:cover;
-  background-position:center;
-  transition:transform .6s cubic-bezier(.16,1,.3,1);
-}
-.gci-overlay{
-  position:absolute;inset:0;
-  background:
-    linear-gradient(180deg, rgba(7,24,32,0) 35%, rgba(7,24,32,.55) 70%, rgba(7,24,32,.92) 100%),
-    radial-gradient(ellipse 90% 70% at 50% 100%, rgba(7,24,32,.5) 0%, transparent 70%);
-  pointer-events:none;
-}
-.gci-ttl{
-  position:absolute;left:14px;right:14px;bottom:14px;z-index:2;
-  font-weight:700;font-size:.86rem;line-height:1.18;letter-spacing:-.005em;
-  color:#fff5ee;
-  text-shadow:0 1px 4px rgba(0,0,0,.45);
-}
-.gci.active{
-  border-color:rgba(201,162,39,.65);
-  box-shadow:
-    0 28px 72px rgba(7,24,32,.42),
-    0 0 0 1px rgba(201,162,39,.28),
-    0 0 60px rgba(201,162,39,.18);
-}
-.gci.active .gci-img{transform:scale(1.06)}
-.gci.active .gci-ttl{font-size:.95rem}
-.gc-arr{
-  position:absolute;top:50%;transform:translateY(-50%);
-  width:44px;height:44px;border-radius:50%;
-  background:rgba(7,24,32,.08);border:1px solid rgba(7,24,32,.16);
-  color:#0c1e26;display:flex;align-items:center;justify-content:center;
-  cursor:pointer;z-index:20;transition:.2s;
-  backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
-}
-.gc-arr:hover{background:var(--gold);border-color:var(--gold);color:var(--navy)}
-.gc-arr.l{left:20px} .gc-arr.r{right:20px}
-.gc-arr svg{width:18px;height:18px;fill:currentColor}
-.guides-cta{text-align:center;margin-top:8px}
-
-/* ═══════════════════════════════════════════
    EPISODES
 ═══════════════════════════════════════════ */
 .eps-sec{
@@ -1190,15 +1098,11 @@ a.epi-cta-link{text-decoration:none;cursor:pointer}
   .wa-spacer{display:none}
   /* On mobile the bg photo's right side is where the content lives; intensify overlay */
   .wa-bg::after{background:linear-gradient(180deg,rgba(7,24,32,.65) 0%,rgba(7,24,32,.85) 100%)}
-  .gci{width:145px}.gci.active{width:165px}
-  .gc-arr.l{left:4px}.gc-arr.r{right:4px}
-  .gcs{height:280px}
 
   /* Section paddings */
   .que-es{padding:100px 24px}
   .form-sec{padding:100px 24px}
   .wa-sec{padding:100px 24px 0}
-  .guides-sec{padding:80px 16px 60px}
   .eps-sec{padding:100px 20px}
   .testim-sec{padding:100px 0}
 }
@@ -1241,15 +1145,6 @@ a.epi-cta-link{text-decoration:none;cursor:pointer}
   .form-sec{padding:80px 20px}
   .stitle{font-size:clamp(1.8rem,7vw,2.4rem)}
 
-  /* Guides carousel — smaller, less rotation */
-  .guides-sec{padding:70px 12px 50px}
-  .gcs{height:240px}
-  .gci{width:130px}.gci.active{width:148px}
-  .gci-ttl{font-size:.7rem;left:9px;right:9px;bottom:9px}
-  .gci.active .gci-ttl{font-size:.78rem}
-  .gc-arr{width:36px;height:36px}
-  .gc-arr.l{left:0}.gc-arr.r{right:0}
-
   /* Episodes */
   .eps-sec{padding:80px 16px}
   .eps-hd{margin-bottom:40px;padding:0 20px}
@@ -1289,8 +1184,6 @@ a.epi-cta-link{text-decoration:none;cursor:pointer}
   .htitle{font-size:1.7rem}
   .qe-title{font-size:2rem}
   .stitle{font-size:1.6rem}
-  .gci{width:115px}.gci.active{width:130px}
-  .gcs{height:215px}
   .epi{width:178px}
   .tc{width:225px}
 }
@@ -1329,7 +1222,7 @@ a.epi-cta-link{text-decoration:none;cursor:pointer}
   "genre": ["Religion & Spirituality", "Mental Health", "Education"],
   "sameAs": [
     "https://www.instagram.com/estacion7.cl/",
-    "https://www.youtube.com/@estacion7.cl",
+    "https://www.youtube.com/@estacion7cl",
     "https://open.spotify.com/show/estacion7"
   ]
 }
@@ -1436,9 +1329,9 @@ a.epi-cta-link{text-decoration:none;cursor:pointer}
           <svg viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
           @estacion7.cl
         </a>
-        <a href="https://youtube.com/@estacion7.cl" class="soc-pill" target="_blank" rel="noopener noreferrer">
+        <a href="https://youtube.com/@estacion7cl" class="soc-pill" target="_blank" rel="noopener noreferrer">
           <svg viewBox="0 0 24 24"><path d="M23.495 6.205a3.007 3.007 0 00-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 00.527 6.205a31.247 31.247 0 00-.522 5.805 31.247 31.247 0 00.522 5.783 3.007 3.007 0 002.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 002.088-2.088 31.247 31.247 0 00.5-5.783 31.247 31.247 0 00-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>
-          @estacion7.cl
+          @estacion7cl
         </a>
         <a href="https://open.spotify.com/show/estacion7" class="soc-pill" target="_blank" rel="noopener noreferrer">
           <svg viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
@@ -1476,9 +1369,7 @@ a.epi-cta-link{text-decoration:none;cursor:pointer}
   <div class="form-bg tz-bg" data-tunnel="bg" aria-hidden="true"></div>
   <div class="fw">
     <div class="form-left">
-      <span class="slabel rv">Herramienta gratuita</span>
-      <h2 class="stitle rv d1">Completa<br>el <span class="g">viaje</span></h2>
-      <p class="ssub rv d2">Solicita tu guía de estudio gratis</p>
+      <h2 class="stitle rv d1" style="margin-bottom: 40px;">Solicita<br>tu guía <span class="g">gratis</span></h2>
 
       <!-- Honeypot -->
       <div class="hp-field" aria-hidden="true">
@@ -1534,7 +1425,7 @@ a.epi-cta-link{text-decoration:none;cursor:pointer}
             <h3 class="gc-back-ttl">Esperanza viva</h3>
             <p class="gc-back-tx">Un recorrido guiado de estudios bíblicos que acompañan el podcast, con preguntas y reflexiones para profundizar lo que escuchas cada semana.</p>
             <div class="gc-back-meta">
-              <span>28 páginas</span>
+              <span>20 páginas</span>
               <span>PDF</span>
               <span>Gratis</span>
             </div>
@@ -1562,29 +1453,6 @@ a.epi-cta-link{text-decoration:none;cursor:pointer}
     </div>
   </div>
   <div class="wa-bar"></div>
-</section>
-
-<!-- ╔═══════════════╗
-     ║ GUIDES CARUS. ║
-     ╚═══════════════╝ -->
-<section class="guides-sec">
-  <div class="gd-bg tz-bg" data-tunnel="bg" aria-hidden="true"></div>
-  <div class="sec-hd rv">
-    <span class="slabel">Material de estudio</span>
-    <h2 class="stitle">Nuestras <span class="g">guías</span></h2>
-  </div>
-  <div class="gcs rv d1">
-    <button class="gc-arr l" onclick="moveGuides(-1)" aria-label="Anterior">
-      <svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg>
-    </button>
-    <div class="gc-track" id="gcTrack"></div>
-    <button class="gc-arr r" onclick="moveGuides(1)" aria-label="Siguiente">
-      <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
-    </button>
-  </div>
-  <div class="guides-cta rv d2">
-    <a href="#guia" class="btn btn-gold" id="guideCta">La quiero</a>
-  </div>
 </section>
 
 <!-- ╔═══════════════╗
@@ -1669,7 +1537,7 @@ a.epi-cta-link{text-decoration:none;cursor:pointer}
         <a href="https://tiktok.com/@estacion7.cl" class="fsoc" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
           <svg viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
         </a>
-        <a href="https://youtube.com/@estacion7.cl" class="fsoc" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+        <a href="https://youtube.com/@estacion7cl" class="fsoc" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
           <svg viewBox="0 0 24 24"><path d="M23.495 6.205a3.007 3.007 0 00-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 00.527 6.205a31.247 31.247 0 00-.522 5.805 31.247 31.247 0 00.522 5.783 3.007 3.007 0 002.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 002.088-2.088 31.247 31.247 0 00.5-5.783 31.247 31.247 0 00-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>
         </a>
         <a href="https://open.spotify.com/show/estacion7" class="fsoc" target="_blank" rel="noopener noreferrer" aria-label="Spotify">
@@ -2076,25 +1944,6 @@ const ScrollBus = (() => {
 })();
 
 /* ── DATA ─────────────────────────────── */
-const GUIDES = [
-  { title:'Dios me oye',                          slug:'dios-me-oye' },
-  { title:'El sentido de la fe',                  slug:'el-sentido-de-la-fe' },
-  { title:'En busca de la verdad',                slug:'en-busca-de-la-verdad' },
-  { title:'Entre familia',                        slug:'entre-familia' },
-  { title:'Jesús restaurador de la vida',         slug:'jesus-restaurador-de-la-vida' },
-  { title:'Mente feliz',                          slug:'mente-feliz' },
-  { title:'Padres preparados, hijos de carácter', slug:'padres-preparados-hijos-de-caracter' },
-  { title:'Sentimientos, la ciencia del existir', slug:'sentimientos-la-ciencia-del-existir' },
-  { title:'Sin tabú',                             slug:'sin-tabu' },
-  { title:'Verdades para el tiempo del fin',      slug:'verdades-para-el-tiempo-del-fin' },
-  { title:'Yo creo',                              slug:'yo-creo' },
-  { title:'Yo en el universo',                    slug:'yo-en-el-universo' },
-].map(g => ({
-  ...g,
-  img: `assets/guias/${g.slug}.jpg`,
-  url: `https://www.nuevotiempo.cl/producto/${g.slug}/`,
-}));
-
 /* Episodes:
    - `available: true` → card is clickable, opens player page
    - `available: false` → card shown as "Próximamente" with lock icon, not clickable
@@ -2354,12 +2203,14 @@ function showFormMsg(type, text){
   const m = document.getElementById('formMsg');
   if(!m) return;
   m.className = 'form-msg show ' + type;
-  m.textContent = text;
+  // Allow inline HTML (used for fallback download link). All inputs that
+  // could reach here are author-controlled strings, not user data.
+  m.innerHTML = text;
 }
 function clearFormMsg(){
   const m = document.getElementById('formMsg');
   if(!m) return;
-  m.className = 'form-msg'; m.textContent = '';
+  m.className = 'form-msg'; m.innerHTML = '';
 }
 
 (function(){
@@ -2385,12 +2236,26 @@ function clearFormMsg(){
     f.addEventListener('input', () => { setErr(f, false); clearFormMsg(); });
   });
 
+  /* Trigger an automatic PDF download. Uses a temporary <a download> element
+     which works across all modern browsers including iOS Safari (≥13). */
+  function downloadGuide(){
+    const a = document.createElement('a');
+    a.href = 'assets/pdf/guia-esperanza-viva.pdf';
+    a.download = 'guia-esperanza-viva.pdf';
+    a.rel = 'noopener';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
+
   function showSuccess(){
-    btn.innerHTML = '🎁 ¡Guía en camino!';
+    btn.innerHTML = '🎁 ¡Descargando guía!';
     btn.classList.remove('loading','btn-gold');
     btn.classList.add('sent');
     spawnParticles(btn);
-    showFormMsg('success','¡Solicitud recibida! Te contactaremos pronto para entregarte tu guía.');
+    showFormMsg('success','¡Listo! Tu guía se está descargando. Si no inicia automáticamente, <a href="assets/pdf/guia-esperanza-viva.pdf" download style="color:inherit;text-decoration:underline">haz clic aquí</a>.');
+    // Trigger the actual file download
+    downloadGuide();
     // Clear fields
     if(fNombre) fNombre.value = '';
     if(fEmail)  fEmail.value  = '';
@@ -2501,168 +2366,6 @@ function clearFormMsg(){
   });
 })();
 
-/* ── GUIDES CAROUSEL ──────────────────────
-   Three-in-one carousel (same model as episodes):
-   1) auto-rotation
-   2) arrow buttons
-   3) drag / swipe (mouse + touch) with snap-to-nearest
-*/
-(function(){
-  const N      = GUIDES.length;
-  const track  = document.getElementById('gcTrack');
-  const ctaBtn = document.getElementById('guideCta');
-  if (!track) return;
-
-  const PX_PER_UNIT = 190;   // matches the translateX(offset * 190) in render
-  let idx        = 0;        // integer "committed" index (post-snap)
-  let displayIdx = 0;        // float index — used during drag for smooth motion
-  let timer;
-
-  function build() {
-    GUIDES.forEach((g, i) => {
-      const el = document.createElement('a');
-      el.className = 'gci';
-      el.href = g.url;
-      el.target = '_blank';
-      el.rel = 'noopener noreferrer';
-      el.draggable = false;                          // prevent native HTML5 link-drag
-      el.setAttribute('aria-label', `Guía: ${g.title} — abrir en Nuevo Tiempo`);
-      el.innerHTML = `
-        <div class="gci-img" style="background-image:url('${g.img}')" draggable="false"></div>
-        <div class="gci-overlay"></div>
-        <span class="gci-ttl">${g.title}</span>`;
-      // Clicking a non-center card rotates it to the center;
-      // active card opens the link.
-      el.addEventListener('click', (ev) => {
-        // Block click if user just dragged
-        if (dragMoved) { ev.preventDefault(); ev.stopPropagation(); return; }
-        if (!el.classList.contains('active')) {
-          ev.preventDefault();
-          idx = i;
-          displayIdx = idx;
-          render();
-        }
-      });
-      track.appendChild(el);
-    });
-    render();
-  }
-
-  function render() {
-    const cards = track.querySelectorAll('.gci');
-    cards.forEach((c, i) => {
-      // Circular offset (can be fractional during drag)
-      let off = i - displayIdx;
-      while (off >  N/2) off -= N;
-      while (off < -N/2) off += N;
-      const abs = Math.abs(off);
-      const scale   = Math.max(.52, 1 - abs * .16);
-      const tx      = off * PX_PER_UNIT;
-      const tz      = -abs * 70;
-      const ry      = off * 10;
-      const opacity = Math.max(.28, 1 - abs * .22);
-      c.style.transform = `translateX(${tx}px) translateZ(${tz}px) rotateY(${ry}deg) scale(${scale})`;
-      c.style.opacity   = opacity;
-      c.style.zIndex    = 20 - Math.round(abs);
-      c.classList.toggle('active', abs < 0.5);
-    });
-    // Update CTA to point at the currently centered guide (use idx, not displayIdx,
-    // so the CTA only swaps once we've snapped — avoids flickering during drag)
-    if (ctaBtn) {
-      const active = GUIDES[idx];
-      ctaBtn.href = active.url;
-      ctaBtn.setAttribute('aria-label', `La quiero — ${active.title}`);
-    }
-  }
-
-  window.moveGuides = dir => {
-    idx = ((idx + dir) % N + N) % N;
-    displayIdx = idx;
-    render();
-  };
-
-  function startTimer(){ clearInterval(timer); timer = setInterval(() => moveGuides(1), 5500); }
-  function stopTimer(){ clearInterval(timer); }
-
-  // ─── DRAG / SWIPE ───────────────────────
-  let dragging = false;
-  let dragMoved = false;        // becomes true once movement crosses threshold
-  let startX = 0;
-  let startDisplayIdx = 0;
-  let pointerId = null;
-
-  function onPointerDown(e){
-    if (e.target.closest('.gc-arr')) return;       // let arrows handle their own clicks
-    dragging = true;
-    dragMoved = false;
-    stopTimer();
-    startX = (e.clientX != null ? e.clientX : (e.touches && e.touches[0].clientX) || 0);
-    startDisplayIdx = displayIdx;
-    track.classList.add('dragging');
-    pointerId = e.pointerId;
-    if (track.setPointerCapture && pointerId != null) {
-      try { track.setPointerCapture(pointerId); } catch(_) {}
-    }
-  }
-
-  function onPointerMove(e){
-    if (!dragging) return;
-    const x = (e.clientX != null ? e.clientX : (e.touches && e.touches[0].clientX) || 0);
-    const dx = x - startX;
-    if (Math.abs(dx) > 6) dragMoved = true;
-    // 1 unit of displayIdx == PX_PER_UNIT pixels of horizontal drag
-    displayIdx = startDisplayIdx - dx / PX_PER_UNIT;
-    render();
-  }
-
-  function onPointerUp(){
-    if (!dragging) return;
-    dragging = false;
-    track.classList.remove('dragging');
-    // Snap to nearest integer index
-    idx = ((Math.round(displayIdx) % N) + N) % N;
-    displayIdx = idx;
-    render();                                       // CSS transition kicks in here
-    // Resume auto-rotate after a brief pause
-    setTimeout(() => { if (!dragging) startTimer(); }, 1500);
-    // Reset dragMoved after the impending click event has fired
-    setTimeout(() => { dragMoved = false; }, 50);
-  }
-
-  if (window.PointerEvent) {
-    track.addEventListener('pointerdown',   onPointerDown);
-    track.addEventListener('pointermove',   onPointerMove);
-    track.addEventListener('pointerup',     onPointerUp);
-    track.addEventListener('pointercancel', onPointerUp);
-    track.addEventListener('pointerleave',  () => { if (dragging) onPointerUp(); });
-  } else {
-    track.addEventListener('mousedown',   onPointerDown);
-    window.addEventListener('mousemove',  onPointerMove);
-    window.addEventListener('mouseup',    onPointerUp);
-    track.addEventListener('touchstart',  onPointerDown, { passive: true });
-    track.addEventListener('touchmove',   onPointerMove, { passive: true });
-    track.addEventListener('touchend',    onPointerUp);
-  }
-
-  // Belt-and-suspenders: completely block native HTML5 drag-and-drop on this track.
-  // Without this, mousedown on an <a class="gci"> can trigger the browser's native
-  // link-drag and steal the pointer events before our custom drag handler can use them.
-  track.addEventListener('dragstart', e => e.preventDefault());
-
-  // Hover-pause on cards (desktop) — same behavior as before
-  track.addEventListener('mouseenter', stopTimer);
-  track.addEventListener('mouseleave', () => { if (!dragging) startTimer(); });
-
-  build();
-  startTimer();
-
-  if (ctaBtn) {
-    ctaBtn.target = '_blank';
-    ctaBtn.rel = 'noopener noreferrer';
-    ctaBtn.addEventListener('mouseenter', stopTimer);
-    ctaBtn.addEventListener('mouseleave', startTimer);
-  }
-})();
 
 /* ── EPISODES BELT ──────────────────────
    Three-in-one carousel:

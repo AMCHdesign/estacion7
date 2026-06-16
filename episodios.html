@@ -275,7 +275,7 @@ body.loaded .eh-meta{opacity:1;transform:none;filter:blur(0)}
 .ep{
   position:relative;
   display:grid;
-  grid-template-columns:340px auto 1fr auto;
+  grid-template-columns:375px auto 1fr auto;
   gap:28px;
   align-items:center;
   padding:24px;
@@ -331,9 +331,10 @@ body.loaded .eh-meta{opacity:1;transform:none;filter:blur(0)}
 /* ── Columna 1: Thumbnail (placeholder o foto) ─────────── */
 .ep-thumb{
   position:relative;
-  width:340px;
-  /* 3:2 para que coincida con la proporción de las miniaturas de YouTube
-     y no se recorte la imagen al usar object-fit:cover. */
+  /* 375×250 (3:2). El ancho está alineado con la altura de la columna
+     de acciones (5 botones × 42px + 4 gaps × 10px = 250px), así thumb y
+     acts comparten alto y el card queda visualmente balanceado. */
+  width:375px;
   aspect-ratio:3/2;
   border-radius:16px;overflow:hidden;
   background:linear-gradient(135deg,var(--teal) 0%,var(--navy) 100%);
@@ -470,7 +471,7 @@ body.loaded .eh-meta{opacity:1;transform:none;filter:blur(0)}
 /* Watermark gigante del número detrás de la card */
 .ep-watermark{
   position:absolute;
-  top:50%;right:340px;transform:translateY(-50%);
+  top:50%;right:375px;transform:translateY(-50%);
   z-index:0;pointer-events:none;user-select:none;
   font-weight:900;font-size:14rem;line-height:.85;
   color:transparent;
@@ -489,7 +490,9 @@ body.loaded .eh-meta{opacity:1;transform:none;filter:blur(0)}
   position:relative;z-index:1;
   display:flex;flex-direction:column;gap:10px;justify-content:center;
   align-self:center;
-  min-width:210px;
+  /* 240px acomoda el label más largo ("Profundiza esta lección")
+     sin truncar con ellipsis a font-size .85rem en Kanit. */
+  min-width:240px;
 }
 /* Wrapper que ocupa todo el ancho de la columna (para que disabled+activo midan igual) */
 .ep-btn-wrap{position:relative;display:block;width:100%}
@@ -554,6 +557,21 @@ body.loaded .eh-meta{opacity:1;transform:none;filter:blur(0)}
   background:rgba(237,241,242,.04);
   transform:translateY(-1px);
 }
+
+/* Profundiza esta lección — variante teal/aqua para distinguirla del resto.
+   Color secundario de marca, semánticamente "estudio/profundización". */
+.ep-btn-leccion{
+  background:rgba(94,196,200,.06);color:var(--light);
+  border-color:rgba(94,196,200,.22);
+}
+.ep-btn-leccion svg{stroke:var(--aqua);fill:none}
+.ep-btn-leccion:hover{
+  background:rgba(94,196,200,.16);
+  border-color:rgba(94,196,200,.55);
+  color:var(--aqua);
+  transform:translateY(-1px);
+}
+.ep-btn-leccion:hover svg{stroke:var(--aqua)}
 
 /* Estado disabled — usado en locked + en botones que aún no tienen recurso */
 .ep-btn.is-disabled{
@@ -970,6 +988,11 @@ body.loaded .eh-meta{opacity:1;transform:none;filter:blur(0)}
 .pl-action.pl-action-yt:hover{
   background:rgba(217,75,62,.1);border-color:var(--red);color:var(--red)
 }
+/* Profundiza esta lección — variante aqua (paralelo al ep-btn-leccion de la card) */
+.pl-action.pl-action-leccion{color:var(--aqua);border-color:rgba(94,196,200,.3)}
+.pl-action.pl-action-leccion:hover{
+  background:rgba(94,196,200,.12);border-color:var(--aqua);color:var(--aqua)
+}
 
 /* MOCK PLAYER — imagen del episodio con play encima
    No carga video real, es un demo visual hasta que tengamos
@@ -1058,16 +1081,16 @@ body.pl-locked{overflow:hidden}
    RESPONSIVE
 ═══════════════════════════════════════════ */
 @media(max-width:1100px){
-  .ep{grid-template-columns:300px auto 1fr auto;gap:22px;padding:20px}
-  .ep-thumb{width:300px}
+  .ep{grid-template-columns:330px auto 1fr auto;gap:22px;padding:20px}
+  .ep-thumb{width:330px}              /* 330×220 (3:2) */
   .ep-thumb-num{font-size:7rem}
-  .ep-watermark{right:280px;font-size:11rem}
-  .ep-acts{min-width:200px}
+  .ep-watermark{right:310px;font-size:11rem}
+  .ep-acts{min-width:230px}
 }
 
 @media(max-width:980px){
-  .ep{grid-template-columns:260px auto 1fr auto;gap:18px}
-  .ep-thumb{width:260px}
+  .ep{grid-template-columns:285px auto 1fr auto;gap:18px}
+  .ep-thumb{width:285px}              /* 285×190 (3:2) */
   .ep-thumb-num{font-size:6rem}
 }
 
@@ -1076,11 +1099,11 @@ body.pl-locked{overflow:hidden}
   .burger{display:flex}
   .es{padding:40px 20px 80px}
   /* Columna número se va — mantenemos solo "Ep. NN" arriba del título */
-  .ep{grid-template-columns:240px 1fr auto;gap:22px}
-  .ep-thumb{width:240px}
+  .ep{grid-template-columns:255px 1fr auto;gap:22px}
+  .ep-thumb{width:255px}              /* 255×170 (3:2) */
   .ep-num{display:none}
   /* Watermark se mueve a un costado más interior */
-  .ep-watermark{right:200px;font-size:9rem}
+  .ep-watermark{right:215px;font-size:9rem}
   .wa-in{grid-template-columns:1fr;gap:32px}
   .wa-spacer{display:none}
   .wa-bg::after{background:linear-gradient(180deg,rgba(7,24,32,.65) 0%,rgba(7,24,32,.85) 100%)}
@@ -1292,7 +1315,7 @@ body.pl-locked{overflow:hidden}
         <a href="https://tiktok.com/@estacion7.cl" class="fsoc" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
           <svg viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
         </a>
-        <a href="https://youtube.com/@estacion7.cl" class="fsoc" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+        <a href="https://www.youtube.com/@estacion7cl" class="fsoc" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
           <svg viewBox="0 0 24 24"><path d="M23.495 6.205a3.007 3.007 0 00-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 00.527 6.205a31.247 31.247 0 00-.522 5.805 31.247 31.247 0 00.522 5.783 3.007 3.007 0 002.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 002.088-2.088 31.247 31.247 0 00.5-5.783 31.247 31.247 0 00-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>
         </a>
         <a href="https://open.spotify.com/show/estacion7" class="fsoc" target="_blank" rel="noopener noreferrer" aria-label="Spotify">
@@ -1350,9 +1373,9 @@ body.pl-locked{overflow:hidden}
       <p class="pl-desc-text" id="plDesc">—</p>
     </div>
 
-    <!-- Acciones: YouTube · Comentar · Solicita tu guía · Compartir -->
+    <!-- Acciones: YouTube · Comentar · Solicita tu guía · Profundiza esta lección · Compartir -->
     <div class="pl-actions">
-      <a class="pl-action pl-action-yt" id="plYt" href="https://youtube.com/@estacion7.cl" target="_blank" rel="noopener noreferrer">
+      <a class="pl-action pl-action-yt" id="plYt" href="https://www.youtube.com/@estacion7cl" target="_blank" rel="noopener noreferrer">
         <svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31.4 31.4 0 0 0 0 12a31.4 31.4 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1C4.5 20.5 12 20.5 12 20.5s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31.4 31.4 0 0 0 24 12a31.4 31.4 0 0 0-.5-5.8zM9.6 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg>
         <span>Ver en YouTube</span>
       </a>
@@ -1363,6 +1386,10 @@ body.pl-locked{overflow:hidden}
       <a class="pl-action pl-action-primary" href="index.html#guia">
         <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><polyline points="14 2 14 8 20 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         <span>Solicita tu guía</span>
+      </a>
+      <a class="pl-action pl-action-leccion" id="plLeccion" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4h7a4 4 0 0 1 4 4v12a3 3 0 0 0-3-3H2z"/><path d="M22 4h-7a4 4 0 0 0-4 4v12a3 3 0 0 1 3-3h8z"/></svg>
+        <span>Profundiza esta lección</span>
       </a>
       <button type="button" class="pl-action" id="plShare">
         <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="6" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="18" cy="19" r="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98" fill="none" stroke="currentColor" stroke-width="2"/></svg>
@@ -1397,20 +1424,23 @@ const EPISODES = [
        botón YouTube de la card y del modal lleva al canal general. */
     youtube:'',
     spotify:'https://open.spotify.com/show/estacion7',
-    leccion:'',                                    // ruta del PDF cuando exista, ej: 'assets/episodios/lecciones/ep-01.pdf'
+    /* leccion: URL del video de YouTube del curso interactivo asociado
+       a este episodio. Se usa en el botón "Profundiza esta lección" tanto
+       en la card como en el reproductor modal. */
+    leccion:'https://www.youtube.com/watch?v=cHo0RqadL9c',
     /* Miniatura local (16:9 recomendado). Se usa tanto en la card del
        listado como en el placeholder del modal mock. */
     thumb:'assets/img/miniatura01.jpg',
   },
-  { num:'02', title:'¿Se puede empezar de cero?',   desc:'Todos cargamos errores que quisiéramos borrar. Pero, ¿existe realmente el Control+Z en la vida real, o es solo una frase bonita?', available:true,  youtube:'', spotify:'https://open.spotify.com/show/estacion7', leccion:'', thumb:'assets/img/miniatura02.jpg' },
-  { num:'03', title:'El reencuentro más esperado',  desc:'¿Y si alguien que se fue prometió volver a buscarte? Descubre por qué esta promesa podría ser la cita más importante de toda la historia.', available:false, youtube:'', spotify:'', leccion:'', thumb:'assets/img/miniatura03.jpg' },
-  { num:'04', title:'El placer de parar',           desc:'Vivimos sintiéndonos culpables por descansar. ¿Qué pasa si el descanso no es flojera, sino exactamente lo que tu mente y tu cuerpo necesitan?', available:false, youtube:'', spotify:'', leccion:'', thumb:'assets/img/miniatura04.jpg' },
-  { num:'05', title:'El misterio del último sueño', desc:'La muerte es el tema que todos evitan. Hoy lo ponemos sobre la mesa y lo que vas a escuchar puede quitarte el miedo para siempre.', available:false, youtube:'', spotify:'', leccion:'', thumb:'assets/img/miniatura05.jpg' },
-  { num:'06', title:'¿Todavía necesitamos estar juntos?', desc:'Hoy hacemos todo solos: entrenamos, compramos, hasta buscamos espiritualidad en un video. Entonces, ¿para qué sirve la comunidad?', available:false, youtube:'', spotify:'', leccion:'', thumb:'assets/img/miniatura06.jpg' },
-  { num:'07', title:'¿Quién es el dueño del negocio?', desc:'La plata se va sola y el estrés financiero no da tregua. ¿Podría haber una forma completamente distinta de ver tu relación con el dinero?', available:false, youtube:'', spotify:'', leccion:'', thumb:'assets/img/miniatura07.jpg' },
-  { num:'08', title:'El siguiente paso',            desc:'Llevamos siete episodios hablando, pero saber cosas no cambia nada si no te mueves. ¿Qué es lo que realmente te está frenando?', available:false, youtube:'', spotify:'', leccion:'', thumb:'assets/img/miniatura08.jpg' },
-  { num:'09', title:'El mapa del perdón',           desc:'A veces sentimos que lo que hicimos no tiene vuelta atrás, que Dios está demasiado lejos. Hoy descubrimos que existe un camino real y concreto para acercarse a Él.', available:false, youtube:'', spotify:'', leccion:'', thumb:'assets/img/miniatura09.jpg' },
-  { num:'10', title:'Vivir con esperanza',          desc:'Diez estaciones, diez conversaciones que fueron cambiando algo por dentro. Ahora solo queda una pregunta: ¿estás dispuesto a dar el paso que lo cambia todo?', available:false, youtube:'', spotify:'', leccion:'', thumb:'assets/img/miniatura10.jpg' },
+  { num:'02', title:'¿Se puede empezar de cero?',   desc:'Todos cargamos errores que quisiéramos borrar. Pero, ¿existe realmente el Control+Z en la vida real, o es solo una frase bonita?', available:true,  youtube:'', spotify:'https://open.spotify.com/show/estacion7', leccion:'https://www.youtube.com/watch?v=cUdtTLyDSMg', thumb:'assets/img/miniatura02.jpg' },
+  { num:'03', title:'El reencuentro más esperado',  desc:'¿Y si alguien que se fue prometió volver a buscarte? Descubre por qué esta promesa podría ser la cita más importante de toda la historia.', available:false, youtube:'', spotify:'', leccion:'https://www.youtube.com/watch?v=7kNehSKZsVw', thumb:'assets/img/miniatura03.jpg' },
+  { num:'04', title:'El placer de parar',           desc:'Vivimos sintiéndonos culpables por descansar. ¿Qué pasa si el descanso no es flojera, sino exactamente lo que tu mente y tu cuerpo necesitan?', available:false, youtube:'', spotify:'', leccion:'https://www.youtube.com/watch?v=RxSXNB2QIZk', thumb:'assets/img/miniatura04.jpg' },
+  { num:'05', title:'El misterio del último sueño', desc:'La muerte es el tema que todos evitan. Hoy lo ponemos sobre la mesa y lo que vas a escuchar puede quitarte el miedo para siempre.', available:false, youtube:'', spotify:'', leccion:'https://www.youtube.com/watch?v=kO-sxm-N-Q4', thumb:'assets/img/miniatura05.jpg' },
+  { num:'06', title:'¿Todavía necesitamos estar juntos?', desc:'Hoy hacemos todo solos: entrenamos, compramos, hasta buscamos espiritualidad en un video. Entonces, ¿para qué sirve la comunidad?', available:false, youtube:'', spotify:'', leccion:'https://www.youtube.com/watch?v=i8DNIyfd6-E', thumb:'assets/img/miniatura06.jpg' },
+  { num:'07', title:'¿Quién es el dueño del negocio?', desc:'La plata se va sola y el estrés financiero no da tregua. ¿Podría haber una forma completamente distinta de ver tu relación con el dinero?', available:false, youtube:'', spotify:'', leccion:'https://www.youtube.com/watch?v=qB7AVPNBfOk', thumb:'assets/img/miniatura07.jpg' },
+  { num:'08', title:'El siguiente paso',            desc:'Llevamos siete episodios hablando, pero saber cosas no cambia nada si no te mueves. ¿Qué es lo que realmente te está frenando?', available:false, youtube:'', spotify:'', leccion:'https://www.youtube.com/watch?v=_FJJ1bGUzls', thumb:'assets/img/miniatura08.jpg' },
+  { num:'09', title:'El mapa del perdón',           desc:'A veces sentimos que lo que hicimos no tiene vuelta atrás, que Dios está demasiado lejos. Hoy descubrimos que existe un camino real y concreto para acercarse a Él.', available:false, youtube:'', spotify:'', leccion:'https://www.youtube.com/watch?v=xfcAC6jTT3M', thumb:'assets/img/miniatura09.jpg' },
+  { num:'10', title:'Vivir con esperanza',          desc:'Diez estaciones, diez conversaciones que fueron cambiando algo por dentro. Ahora solo queda una pregunta: ¿estás dispuesto a dar el paso que lo cambia todo?', available:false, youtube:'', spotify:'', leccion:'https://www.youtube.com/watch?v=cCzr2_nqk2I', thumb:'assets/img/miniatura10.jpg' },
 ];
 
 /* Ciclo de color de firma por episodio */
@@ -1425,6 +1455,8 @@ const ICONS = {
   yt:   '<svg viewBox="0 0 24 24"><path d="M23.495 6.205a3.007 3.007 0 00-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 00.527 6.205a31.247 31.247 0 00-.522 5.805 31.247 31.247 0 00.522 5.783 3.007 3.007 0 002.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 002.088-2.088 31.247 31.247 0 00.5-5.783 31.247 31.247 0 00-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>',
   sp:   '<svg viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>',
   dl:   '<svg viewBox="0 0 24 24"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  /* book — usado en "Profundiza esta lección" (video del curso interactivo) */
+  book: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4h7a4 4 0 0 1 4 4v12a3 3 0 0 0-3-3H2z"/><path d="M22 4h-7a4 4 0 0 0-4 4v12a3 3 0 0 1 3-3h8z"/></svg>',
 };
 
 /* SVG decorativo (líneas convergentes) para placeholder thumbnail */
@@ -1468,7 +1500,7 @@ const THUMB_ART = `
     /* YouTube — siempre lleva al canal cuando el episodio está disponible.
        Cuando exista el video real del episodio podemos volver a usar ep.youtube. */
     const ytBtn = ep.available
-      ? `<a href="https://youtube.com/@estacion7.cl" target="_blank" rel="noopener noreferrer" class="ep-btn ep-btn-yt">${ICONS.yt}<span class="ep-btn-text">YouTube</span></a>`
+      ? `<a href="https://www.youtube.com/@estacion7cl" target="_blank" rel="noopener noreferrer" class="ep-btn ep-btn-yt">${ICONS.yt}<span class="ep-btn-text">YouTube</span></a>`
       : `<span class="ep-btn-wrap" data-tip="Disponible próximamente"><span class="ep-btn ep-btn-yt is-disabled">${ICONS.yt}<span class="ep-btn-text">YouTube</span></span></span>`;
 
     /* Spotify */
@@ -1480,6 +1512,13 @@ const THUMB_ART = `
        (Reemplaza el antiguo "Descargar lección": queremos que la persona
        solicite la guía, no solo descargar un PDF.) */
     const dlBtn = `<a href="index.html#guia" class="ep-btn ep-btn-dl">${ICONS.dl}<span class="ep-btn-text">Solicita tu guía</span></a>`;
+
+    /* Profundiza esta lección — video del curso interactivo en YouTube.
+       Solo activo cuando el episodio está disponible (mismo criterio que
+       los demás botones: no adelantamos contenido de capítulos locked). */
+    const leccionBtn = (ep.available && ep.leccion)
+      ? `<a href="${ep.leccion}" target="_blank" rel="noopener noreferrer" class="ep-btn ep-btn-leccion">${ICONS.book}<span class="ep-btn-text">Profundiza esta lección</span></a>`
+      : `<span class="ep-btn-wrap" data-tip="Disponible próximamente"><span class="ep-btn ep-btn-leccion is-disabled">${ICONS.book}<span class="ep-btn-text">Próximamente</span></span></span>`;
 
     html += `
     <article class="ep" data-status="${status}" data-sig="${sig}" id="ep-${ep.num}">
@@ -1511,6 +1550,7 @@ const THUMB_ART = `
         ${ytBtn}
         ${spBtn}
         ${dlBtn}
+        ${leccionBtn}
       </div>
     </article>`;
   });
@@ -1795,6 +1835,7 @@ mobMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu
   const descEl     = document.getElementById('plDesc');
   const ytLink     = document.getElementById('plYt');
   const commentLink= document.getElementById('plComment');
+  const leccionLink= document.getElementById('plLeccion');
   const shareBtn   = document.getElementById('plShare');
 
   let currentIdx = -1;
@@ -1860,12 +1901,24 @@ mobMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu
   function updateActionLinks(ep){
     // "Ver en YouTube" → canal general (no tenemos videos por episodio aún)
     if (ytLink) {
-      ytLink.href = 'https://youtube.com/@estacion7.cl';
+      ytLink.href = 'https://www.youtube.com/@estacion7cl';
     }
     // "Comentar" → mock: no lleva a ningún lado. El click se intercepta
     // abajo con preventDefault y solo da feedback visual.
     if (commentLink) {
       commentLink.removeAttribute('href');
+    }
+    // "Profundiza esta lección" → video del curso interactivo en YouTube.
+    // El modal solo se abre para episodios disponibles, así que asumimos
+    // que ep.leccion estará seteado; igual lo verificamos por seguridad.
+    if (leccionLink) {
+      if (ep.leccion) {
+        leccionLink.href = ep.leccion;
+        leccionLink.style.display = '';
+      } else {
+        leccionLink.removeAttribute('href');
+        leccionLink.style.display = 'none';
+      }
     }
   }
 
